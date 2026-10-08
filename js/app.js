@@ -197,6 +197,7 @@
   function renderBoard() {
     var board = document.getElementById('board');
     board.innerHTML = '';
+    board.style.setProperty('--grid-size', N);   // 行列数来自案件配置 size
     for (var r = 0; r < N; r++) {
       for (var c = 0; c < N; c++) {
         var k = key(r, c);

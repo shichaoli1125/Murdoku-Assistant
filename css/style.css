@@ -88,7 +88,7 @@ body{
 .board-wrap{background:var(--panel);border-radius:16px;padding:16px}
 .board-wrap .side-title{color:var(--ink)}
 .board{
-  display:grid;grid-template-columns:repeat(6,1fr);
+  display:grid;grid-template-columns:repeat(var(--grid-size,6),1fr);
   border:3px solid var(--line);border-radius:6px;overflow:hidden;background:var(--line);
   aspect-ratio:1/1;width:100%;max-width:720px;margin:0 auto;position:relative;
 }
