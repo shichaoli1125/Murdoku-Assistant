@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Murdoku · 谋杀数独</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+
+  <!-- 顶部栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">MUR<span class="logo-dot">◉</span>KU</span>
+      <div class="case-meta">
+        <span id="caseTitle" class="case-title"></span>
+        <span id="caseTitleZh" class="case-title-zh"></span>
+        <span id="caseDiff" class="badge"></span>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg">
+        <button id="toolPlace" class="seg-btn active">✚ 放置</button>
+        <button id="toolX" class="seg-btn">✕ 标记</button>
+      </div>
+      <button id="btnUndo" class="tbtn" title="撤销">↶ 撤销</button>
+      <button id="btnClear" class="tbtn" title="清空">🗑 清空</button>
+      <button id="btnRules" class="tbtn" title="规则">？ 规则</button>
+      <button id="btnCheck" class="tbtn primary">✓ 检查</button>
+      <div class="stats">
+        <span class="stat"><b id="timer">00:00</b><small>用时</small></span>
+        <span class="stat"><b id="progress">0 / 6</b><small>已放置</small></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主体 -->
+  <main class="main">
+
+    <!-- 嫌疑人列表 -->
+    <aside class="sidebar">
+      <h2 class="side-title">嫌疑人 <small>SUSPECTS</small></h2>
+      <div id="people" class="people"></div>
+    </aside>
+
+    <!-- 棋盘 -->
+    <section class="board-wrap">
+      <h2 class="side-title">犯罪现场 <small>CRIME SCENE</small></h2>
+      <div id="board" class="board"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- 浮动状态提示 -->
+<div id="statusMsg" class="status-msg"></div>
+
+<!-- 结案弹窗 -->
+<div id="victoryModal" class="modal-mask">
+  <div class="modal victory">
+    <div class="case-closed">CASE CLOSED</div>
+    <h3>全部位置正确！</h3>
+    <p>凶手是 <b id="victoryName" class="killer-name"></b></p>
+    <p class="modal-tip">他/她与受害者独处同一房间，案子破了。</p>
+    <button id="btnAgain" class="tbtn primary">再来一次</button>
+  </div>
+</div>
+
+<!-- 规则弹窗 -->
+<div id="rulesModal" class="modal-mask">
+  <div class="modal rules">
+    <h3>怎么玩</h3>
+    <ol class="rules-list">
+      <li><b>每行、每列只能有一个人。</b> 放下一个人后，他所在的整行整列都会被锁定。</li>
+      <li><b>读每个人的线索。</b> 有人在某房间、坐在椅子上、在油渍上、在置物架旁、独自在等候区……所有线索必须同时成立。</li>
+      <li><b>深色物件不可站人</b>：桌子、电视、置物架、盆栽；椅子、油渍、车可以站。</li>
+      <li><b>用 ✕标记</b> 给当前选中的人打草稿叉（换人互不影响）；点棋盘上的棋子可收回重放。</li>
+      <li><b>放好 6 人后点「检查」。</b> 全部位置正确后，指认与受害者独处一室的人——那就是凶手。</li>
+    </ol>
+    <button id="closeRules" class="modal-close">知道了</button>
+  </div>
+</div>
+
+<script src="js/cases.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
