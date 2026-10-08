@@ -175,7 +175,9 @@
 
   function toggleX(k) {
     pushHistory();
-    cell(k).x = !cell(k).x;
+    var cc = cell(k);
+    cc.x = !cc.x;
+    cc.notes = [];        // 填入 X 时清除格子内所有标记
     startTimer();
     clearErrors();
     render();
@@ -506,18 +508,28 @@
   });
 
   (function bindEraser() {
-    var er = document.getElementById('btnErase'), t = null;
-    function cancel() { if (t) { clearTimeout(t); t = null; } er.classList.remove('holding'); }
+    var er = document.getElementById('btnErase'), t = null, fired = false;
+    function cancel() {
+      if (t) { clearTimeout(t); t = null; }
+      er.classList.remove('holding');
+      try { er.releasePointerCapture && er._pid != null && er.releasePointerCapture(er._pid); } catch (e) {}
+    }
     er.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
+      e.preventDefault();
+      fired = false;
+      try { er._pid = e.pointerId; er.setPointerCapture(e.pointerId); } catch (err) {}
       er.classList.add('holding');
       t = setTimeout(function () {
-        t = null; er.classList.remove('holding'); clearAll();
-      }, 650);
+        fired = true; t = null; er.classList.remove('holding'); clearAll();
+      }, 600);
     });
-    er.addEventListener('pointerup', cancel);
+    er.addEventListener('pointerup', function () {
+      cancel();
+      if (!fired) flashStatus('长按橡皮擦可清空全盘', true);
+    });
     er.addEventListener('pointercancel', cancel);
-    er.addEventListener('pointerleave', cancel);
+    er.addEventListener('lostpointercapture', function () { if (t) { clearTimeout(t); t = null; } er.classList.remove('holding'); });
     er.addEventListener('contextmenu', function (e) { e.preventDefault(); });
   })();
 
