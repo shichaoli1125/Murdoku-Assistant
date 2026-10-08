@@ -14,7 +14,8 @@
     difficulty: 'EASY',
     size: 7,
 
-    // 房间分区（label：区域名铭牌放在空地板格 [r,c]）
+    // 房间分区 —— 严格按官方 room_code 矩阵：
+    //   0=Beach 沙滩，1=Sea 海，2=Lifeguard's Tower 救生塔，3=Changing Room 更衣室
     regions: [
       {
         id: 'beach', name: 'Beach', nameZh: '沙滩',
@@ -49,7 +50,7 @@
       },
       {
         id: 'changing', name: 'Changing Room', nameZh: '更衣室',
-        color: '#f5ba8a', label: [0, 6],
+        color: '#f5ba8a', label: [2, 4],
         cells: [
           [0, 4], [0, 5], [0, 6],
           [1, 4], [1, 5], [1, 6],
