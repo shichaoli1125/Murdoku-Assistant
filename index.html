@@ -17,6 +17,7 @@
         <span id="caseTitle" class="case-title"></span>
         <span id="caseTitleZh" class="case-title-zh"></span>
         <span id="caseDiff" class="badge"></span>
+        <select id="caseSelect" class="case-select" title="切换案件"></select>
       </div>
     </div>
 
@@ -83,7 +84,13 @@
   </div>
 </div>
 
-<script src="js/cases.js"></script>
+<!-- 1. 逻辑引擎（可选，当前做题不依赖求解） -->
+<script src="js/engine.js"></script>
+<!-- 2. 案件注册表 -->
+<script src="js/case-registry.js"></script>
+<!-- 3. 案件：每个案件一个文件，新增案件在此加一行 -->
+<script src="js/cases/car-repair.js"></script>
+<!-- 4. 交互层 -->
 <script src="js/app.js"></script>
 </body>
 </html>

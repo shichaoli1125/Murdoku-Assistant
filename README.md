@@ -16,12 +16,39 @@
 ## 目录结构
 
 ```
-index.html        页面骨架
-css/style.css     noir 案卷风样式（房间墙、区域铭牌、物件、棋子）
-js/cases.js       案件数据（房间 / 物件 / 人物 / 线索 / 官方答案）
-js/app.js         做题交互（放置、行列封锁、X、撤销、检查）
-js/engine.js      逻辑引擎（可选，当前做题页未引用）
+index.html                页面骨架
+css/style.css             noir 案卷风样式（房间墙、区域铭牌、物件、棋子）
+js/case-registry.js       案件注册表（register / all / get）
+js/cases/                 案件目录，一个案件一个文件
+  └─ car-repair.js        Car Repair（6×6，very easy）
+js/app.js                 做题交互（放置、行列封锁、X、撤销、检查、案件切换）
+js/engine.js              逻辑引擎（可选，当前做题页未引用）
 ```
+
+## 如何新增一个案件
+
+1. 复制 `js/cases/car-repair.js` 为 `js/cases/xxx.js`，修改案件对象并保留末尾的
+   `MurdokuCaseRegistry.register({ ... })`。
+2. 在 `index.html` 中加一行：
+   ```html
+   <script src="js/cases/xxx.js"></script>
+   ```
+3. 刷新页面，顶部「案件」下拉中即可选择。
+   - 用案件的 `order` 字段控制下拉排序（小的在前）；
+   - 注册时会自动校验区域覆盖、受害者数量、答案行列唯一等，问题会在控制台告警。
+
+## 案件数据字段
+
+| 字段 | 说明 |
+| --- | --- |
+| `id / order` | 唯一标识 / 排序权重 |
+| `title / titleZh / difficulty / size` | 名称、中文名、难度、棋盘边长 N |
+| `regions[]` | 房间：`id`、`name/nameZh`、`color`、`label`(铭牌格 `[r,c]`)、`cells[]` |
+| `objects[]` | 物件：`r,c`、`type`、`occupiable`；车为 `type:'car'`、`car`、`span` 且每格一条 |
+| `people[]` | 人物：`id`、`name`、`color`，受害者加 `victim:true` |
+| `clues{}` | 每个人的 `{ en, zh }` 线索 |
+| `answer{}` | 官方标准答案，`pid -> "r,c"` |
+| `killer` | 凶手人物 id |
 
 ## 版权说明
 

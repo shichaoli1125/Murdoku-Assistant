@@ -1,49 +1,32 @@
 /* ============================================================
- * Murdoku 做题交互层（无求解）
+ * Murdoku 做题交互层（无求解，案件与逻辑解耦）
+ * 案件来自 MurdokuCaseRegistry，可在运行时切换。
  * 状态：放置 placements、草稿叉 marks、当前人物、工具模式、计时、阶段
  * ============================================================ */
 (function () {
   'use strict';
 
-  var CASES = window.MurdokuCases;
-  var CASE = CASES[0];
-  var N = CASE.size;
+  var Registry = window.MurdokuCaseRegistry;
+
+  // ---------- 当前案件与派生索引（loadCase 时重建） ----------
+  var CASE = null;
+  var N = 0;
+  var regionAt = {}, objectAt = {}, peopleById = {}, carGroups = {};
 
   // ---------- 状态 ----------
-  var state = {
-    placements: {},        // pid -> "r,c"
-    marks: {},             // pid -> { "r,c": true }
-    selected: 'C',
-    tool: 'place',         // place | x
-    seconds: 0,
-    phase: 'solving',      // solving | solved
-    errors: {},            // "r,c": true 错误格
-    history: []
-  };
-
-  // ---------- 索引 ----------
-  var regionAt = {}, objectAt = {};
-  CASE.regions.forEach(function (reg) {
-    reg.cells.forEach(function (c) { regionAt[c[0] + ',' + c[1]] = reg; });
-  });
-  CASE.objects.forEach(function (o) {
-    objectAt[o.r + ',' + o.c] = o;
-  });
-  var peopleById = {};
-  CASE.people.forEach(function (p) { peopleById[p.id] = p; });
-
-  // 车：取每台车的起始格与跨度
-  var carGroups = {};
-  CASE.objects.forEach(function (o) {
-    if (o.type === 'car') {
-      if (!carGroups[o.car]) carGroups[o.car] = { color: o.car, r: o.r, c0: o.c, span: o.span, cols: [] };
-      carGroups[o.car].cols.push(o.c);
-    }
-  });
-  Object.keys(carGroups).forEach(function (k) {
-    var g = carGroups[k];
-    g.c0 = Math.min.apply(null, g.cols);
-  });
+  var state = null;
+  function freshState() {
+    return {
+      placements: {},        // pid -> "r,c"
+      marks: {},             // pid -> { "r,c": true }
+      selected: null,
+      tool: 'place',         // place | x
+      seconds: 0,
+      phase: 'solving',      // solving | solved
+      errors: {},            // "r,c": true 错误格
+      history: []
+    };
+  }
 
   function key(r, c) { return r + ',' + c; }
   function personAt(k) {
@@ -51,6 +34,47 @@
     return null;
   }
   function ensureMarks(pid) { if (!state.marks[pid]) state.marks[pid] = {}; return state.marks[pid]; }
+
+  // ---------- 加载案件 ----------
+  function loadCase(id) {
+    var c = Registry.get(id);
+    if (!c) throw new Error('案件不存在: ' + id);
+    CASE = c;
+    N = c.size;
+    regionAt = {}; objectAt = {}; peopleById = {}; carGroups = {};
+
+    c.regions.forEach(function (reg) {
+      reg.cells.forEach(function (cell) { regionAt[cell[0] + ',' + cell[1]] = reg; });
+    });
+    c.objects.forEach(function (o) { objectAt[o.r + ',' + o.c] = o; });
+    c.people.forEach(function (p) { peopleById[p.id] = p; });
+
+    // 车：聚合同名车的各格，取最左起点与跨度
+    c.objects.forEach(function (o) {
+      if (o.type === 'car') {
+        if (!carGroups[o.car]) carGroups[o.car] = { color: o.car, r: o.r, c0: o.c, span: o.span, cols: [] };
+        carGroups[o.car].cols.push(o.c);
+      }
+    });
+    Object.keys(carGroups).forEach(function (k) {
+      carGroups[k].c0 = Math.min.apply(null, carGroups[k].cols);
+    });
+
+    state = freshState();
+    state.selected = c.people[0].id;
+
+    resetTimer();
+    hideAllModals();
+    updateCaseHeader();
+    render();
+  }
+
+  function updateCaseHeader() {
+    document.getElementById('caseTitle').textContent = CASE.title;
+    document.getElementById('caseTitleZh').textContent = CASE.titleZh;
+    document.getElementById('caseDiff').textContent = CASE.difficulty;
+    document.getElementById('timer').textContent = '00:00';
+  }
 
   // ---------- 计时 ----------
   var timer = null;
@@ -60,6 +84,11 @@
       state.seconds++;
       document.getElementById('timer').textContent = fmtTime(state.seconds);
     }, 1000);
+  }
+  function resetTimer() {
+    if (timer) { clearInterval(timer); timer = null; }
+    state.seconds = 0;
+    document.getElementById('timer').textContent = '00:00';
   }
   function fmtTime(s) {
     var m = Math.floor(s / 60), ss = s % 60;
@@ -79,7 +108,6 @@
     var occ = objectAt[k];
     if (occ && occ.occupiable === false) return;       // 不可站
     pushHistory();
-    // 若目标格已有自己以外的人，先移除对方
     var existing = personAt(k);
     if (existing && existing !== pid) delete state.placements[existing];
     state.placements[pid] = k;
@@ -178,21 +206,15 @@
         cell.className = 'cell';
         cell.style.background = reg.color;
 
-        // 区域墙：与上方/左方区域不同则沿该边画一道粗黑墙（bottom/right 由邻格绘制，保证每道墙只画一次）
+        // 区域墙：与上方/左方区域不同则沿该边画粗黑墙（每道墙只画一次）
         var wallShadows = [];
         if (r > 0 && regionAt[key(r - 1, c)].id !== reg.id) wallShadows.push('inset 0 4px 0 var(--line)');
         if (c > 0 && regionAt[key(r, c - 1)].id !== reg.id) wallShadows.push('inset 4px 0 0 var(--line)');
         if (wallShadows.length) cell.style.boxShadow = wallShadows.join(',');
 
-        // 车的非起始格：不重复画整车
+        // 车的各格：不逐格画整车，改用棋盘级图层
         var isCarPart = occ && occ.type === 'car';
-        var carStart = false;
-        if (isCarPart) {
-          var g = carGroups[occ.car];
-          carStart = (c === g.c0);
-        }
 
-        // 物件图层（车改成棋盘级图层，这里跳过）
         if (occ && !isCarPart) {
           if (occ.occupiable === false) cell.classList.add('blocked-cell');
           var icon = document.createElement('div');
@@ -201,7 +223,7 @@
           cell.appendChild(icon);
         }
 
-        // X 标记（当前选中人物的草稿）
+        // X 标记
         var marks = state.marks[state.selected] || {};
         if (marks[k]) {
           var xm = document.createElement('div');
@@ -210,14 +232,10 @@
           cell.appendChild(xm);
         }
 
-        // 封锁淡显
         var placedHere = personAt(k);
         if (!placedHere && blockedBySel(k)) cell.classList.add('locked');
-
-        // 错误
         if (state.errors[k]) cell.classList.add('error');
 
-        // 人物棋子
         if (placedHere) {
           var pp = peopleById[placedHere];
           var tok = document.createElement('div');
@@ -229,7 +247,6 @@
           cell.appendChild(tok);
         }
 
-        // 点击
         (function (kk, ph) {
           cell.addEventListener('click', function () {
             if (state.tool === 'x') { toggleMark(state.selected, kk); return; }
@@ -242,7 +259,7 @@
       }
     }
 
-    // 跨格车图层（棋盘级，不拦截点击）
+    // 跨格车图层
     Object.keys(carGroups).forEach(function (k) {
       var g = carGroups[k];
       var layer = document.createElement('div');
@@ -327,11 +344,17 @@
 
   // ---------- 弹窗 ----------
   function showVictory() {
-    var v = document.getElementById('victoryModal');
     var killer = peopleById[CASE.killer];
     document.getElementById('victoryName').textContent = killer.name;
-    v.classList.add('show');
-    clearInterval(timer);
+    document.getElementById('victoryModal').classList.add('show');
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  function hideAllModals() {
+    ['victoryModal', 'rulesModal'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('show');
+    });
   }
 
   var statusTimer = null;
@@ -341,6 +364,26 @@
     el.className = 'show' + (ok ? ' ok' : '');
     clearTimeout(statusTimer);
     statusTimer = setTimeout(function () { el.className = ''; }, 2200);
+  }
+
+  // ---------- 案件切换器 ----------
+  function sortedCases() {
+    return Registry.all().sort(function (a, b) {
+      var oa = (a.order == null ? 999 : a.order), ob = (b.order == null ? 999 : b.order);
+      return oa - ob;
+    });
+  }
+
+  function buildSwitcher() {
+    var sel = document.getElementById('caseSelect');
+    sel.innerHTML = '';
+    sortedCases().forEach(function (c) {
+      var opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = (c.titleZh || c.title) + ' · ' + (c.difficulty || '') + ' · ' + c.size + '×' + c.size;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change', function () { loadCase(sel.value); });
   }
 
   // ---------- 工具栏事件 ----------
@@ -357,15 +400,17 @@
   });
   document.getElementById('btnAgain').addEventListener('click', function () {
     document.getElementById('victoryModal').classList.remove('show');
-    state.seconds = 0; state.phase = 'solving'; timer = null;
-    document.getElementById('timer').textContent = '00:00';
     clearAll();
+    resetTimer();
   });
 
-  // 案件标题
-  document.getElementById('caseTitle').textContent = CASE.title;
-  document.getElementById('caseTitleZh').textContent = CASE.titleZh;
-  document.getElementById('caseDiff').textContent = CASE.difficulty;
-
-  render();
+  // ---------- 启动 ----------
+  if (Registry.count() === 0) {
+    document.getElementById('caseTitle').textContent = '暂无案件';
+    return;
+  }
+  buildSwitcher();
+  var firstId = sortedCases()[0].id;
+  document.getElementById('caseSelect').value = firstId;
+  loadCase(firstId);
 })();
