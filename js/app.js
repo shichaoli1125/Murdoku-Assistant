@@ -282,6 +282,18 @@
       lab.innerHTML = '<b>' + reg.nameZh + '</b><span>' + reg.name + '</span>';
       board.appendChild(lab);
     });
+
+    // 铭牌自动收进棋盘，避免在边缘被裁切
+    Array.prototype.forEach.call(board.querySelectorAll('.region-label'), function (lab) {
+      var br = board.getBoundingClientRect();
+      var lr = lab.getBoundingClientRect();
+      var dx = 0, dy = 0, pad = 2;
+      if (lr.left < br.left + pad) dx = br.left + pad - lr.left;
+      if (lr.right > br.right - pad) dx = br.right - pad - lr.right;
+      if (lr.top < br.top + pad) dy = br.top + pad - lr.top;
+      if (lr.bottom > br.bottom - pad) dy = br.bottom - pad - lr.bottom;
+      if (dx || dy) lab.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    });
   }
 
   function renderPeople() {
@@ -328,7 +340,8 @@
     }
     var map = {
       table: ICON.table, tv: ICON.tv, shelf: ICON.shelf, plant: ICON.plant,
-      chair: ICON.chair, oil: ICON.oil
+      chair: ICON.chair, oil: ICON.oil, boulder: ICON.boulder,
+      lounge: ICON.lounge, carpet: ICON.carpet
     };
     return '<svg class="svg-obj" viewBox="0 0 40 40">' + (map[o.type] || '') + '</svg>';
   }
@@ -339,7 +352,10 @@
     shelf: '<rect x="7" y="6" width="26" height="28" rx="1" fill="#7f8aa8" stroke="#31384c" stroke-width="2"/><line x1="7" y1="15" x2="33" y2="15" stroke="#31384c" stroke-width="2"/><line x1="7" y1="24" x2="33" y2="24" stroke="#31384c" stroke-width="2"/><rect x="10" y="8" width="4" height="6" fill="#b8c2dd"/><rect x="16" y="8" width="4" height="6" fill="#9aa6c8"/><rect x="22" y="17" width="4" height="6" fill="#b8c2dd"/>',
     plant: '<path d="M20 34 V20" stroke="#3f7a46" stroke-width="2"/><path d="M20 22 C12 18 10 10 12 8 C18 10 20 16 20 20 Z" fill="#5aa862"/><path d="M20 22 C28 18 30 10 28 8 C22 10 20 16 20 20 Z" fill="#6fbb72"/><path d="M20 18 C20 10 24 6 26 6 C26 12 24 16 20 18 Z" fill="#7ccb82"/><path d="M14 34 h12 l-2 4 h-8 z" fill="#b07a52"/>',
     chair: '<rect x="12" y="9" width="16" height="14" rx="4" fill="#e7e3ee" stroke="#5a5470" stroke-width="2"/><rect x="9" y="11" width="4" height="12" rx="2" fill="#d4cee0" stroke="#5a5470" stroke-width="2"/><rect x="27" y="11" width="4" height="12" rx="2" fill="#d4cee0" stroke="#5a5470" stroke-width="2"/><rect x="13" y="23" width="14" height="4" fill="#e7e3ee" stroke="#5a5470" stroke-width="2"/>',
-    oil: '<path d="M10 22 C10 14 18 10 20 10 C22 10 30 14 30 22 C30 29 25 32 20 32 C15 32 10 29 10 22 Z" fill="#3a3a3f"/><ellipse cx="17" cy="20" rx="3" ry="4" fill="#5c5c63"/>'
+    oil: '<path d="M10 22 C10 14 18 10 20 10 C22 10 30 14 30 22 C30 29 25 32 20 32 C15 32 10 29 10 22 Z" fill="#3a3a3f"/><ellipse cx="17" cy="20" rx="3" ry="4" fill="#5c5c63"/>',
+    boulder: '<path d="M10 30 C6 24 9 14 16 11 C24 7 33 13 32 21 C32 27 27 31 21 31 Z" fill="#9b9b96" stroke="#6c6c67" stroke-width="2"/><path d="M14 22 C16 18 20 16 24 16" fill="none" stroke="#c4c4bf" stroke-width="2"/>',
+    lounge: '<rect x="7" y="14" width="26" height="8" rx="3" fill="#f3e3c2" stroke="#9a7b4e" stroke-width="2"/><rect x="7" y="22" width="26" height="5" rx="2" fill="#e6cf9f" stroke="#9a7b4e" stroke-width="2"/><rect x="26" y="12" width="6" height="16" rx="3" fill="#f0dcb4" stroke="#9a7b4e" stroke-width="2"/><line x1="11" y1="18" x2="24" y2="18" stroke="#c9ad77" stroke-width="1.5"/>',
+    carpet: '<rect x="6" y="8" width="28" height="24" rx="2" fill="#f27d72" stroke="#b54b42" stroke-width="2"/><rect x="10" y="12" width="20" height="16" rx="1" fill="none" stroke="#ffd0c8" stroke-width="1.6"/><line x1="20" y1="12" x2="20" y2="28" stroke="#ffd0c8" stroke-width="1.4"/>'
   };
 
   // ---------- 弹窗 ----------
