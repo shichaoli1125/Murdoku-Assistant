@@ -22,13 +22,15 @@
     </div>
 
     <div class="toolbar">
-      <div class="seg">
-        <button id="toolPlace" class="seg-btn active">✚ 放置</button>
-        <button id="toolX" class="seg-btn">✕ 标记</button>
-      </div>
+      <button id="btnX" class="tbtn iconbtn" title="X 标记：点格子打叉">
+        <span class="x-icon"><svg viewBox="0 0 24 24"><path d="M5 5 L19 19 M19 5 L5 19"/></svg></span>
+        <small>点格子打叉</small>
+      </button>
+      <button id="btnErase" class="tbtn iconbtn" title="长按清空全盘">
+        <span class="erase-icon"><svg viewBox="0 0 24 24"><path d="M3 17 L11 9 L16 14 L9 21 H5 Z"/><path d="M11 9 L15 5 L20 10 L16 14"/></svg></span>
+        <small>长按清空</small>
+      </button>
       <button id="btnUndo" class="tbtn" title="撤销">↶ 撤销</button>
-      <button id="btnClear" class="tbtn" title="清空">🗑 清空</button>
-      <button id="btnRules" class="tbtn" title="规则">？ 规则</button>
       <button id="btnCheck" class="tbtn primary">✓ 检查</button>
       <div class="stats">
         <span class="stat"><b id="timer">00:00</b><small>用时</small></span>
@@ -69,29 +71,12 @@
   </div>
 </div>
 
-<!-- 规则弹窗 -->
-<div id="rulesModal" class="modal-mask">
-  <div class="modal rules">
-    <h3>怎么玩</h3>
-    <ol class="rules-list">
-      <li><b>每行、每列只能有一个人。</b> 放下一个人后，他所在的整行整列都会被锁定。</li>
-      <li><b>读每个人的线索。</b> 有人在某房间、坐在椅子上、在油渍上、在置物架旁、独自在等候区……所有线索必须同时成立。</li>
-      <li><b>深色物件不可站人</b>：桌子、电视、置物架、盆栽；椅子、油渍、车可以站。</li>
-      <li><b>用 ✕标记</b> 给当前选中的人打草稿叉（换人互不影响）；点棋盘上的棋子可收回重放。</li>
-      <li><b>放好 6 人后点「检查」。</b> 全部位置正确后，指认与受害者独处一室的人——那就是凶手。</li>
-    </ol>
-    <button id="closeRules" class="modal-close">知道了</button>
-  </div>
-</div>
-
-<!-- 1. 逻辑引擎（可选，当前做题不依赖求解） -->
-<script src="js/engine.js"></script>
-<!-- 2. 案件注册表 -->
+<!-- 1. 案件注册表 -->
 <script src="js/case-registry.js"></script>
-<!-- 3. 案件：每个案件一个文件，新增案件在此加一行 -->
+<!-- 2. 案件：每个案件一个文件，新增案件在此加一行 -->
 <script src="js/cases/car-repair.js"></script>
 <script src="js/cases/the-beach.js"></script>
-<!-- 4. 交互层 -->
+<!-- 3. 交互层 -->
 <script src="js/app.js"></script>
 </body>
 </html>
