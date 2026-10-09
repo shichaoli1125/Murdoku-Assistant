@@ -71,6 +71,8 @@ body{
 .main{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:start}
 .side-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:12px;display:flex;align-items:baseline;gap:8px}
 .side-title small{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.5);font-weight:700}
+.global-clues{margin-top:18px}
+.global-clue{background:rgba(255,255,255,.08);border-left:3px solid #ffd166;border-radius:6px;padding:8px 10px;font-size:12.5px;line-height:1.5;color:#e8e4d8;margin-bottom:8px}
 
 /* ---------- 嫌疑人卡 ---------- */
 .people{display:flex;flex-direction:column;gap:10px}

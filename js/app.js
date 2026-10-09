@@ -319,7 +319,27 @@
   function render() {
     renderBoard();
     renderPeople();
+    renderGlobalClues();
     updateProgress();
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function renderGlobalClues() {
+    var box = document.getElementById('globalClues');
+    if (!box) return;
+    var list = (CASE.globalClues || []);
+    if (!list.length) { box.innerHTML = ''; box.style.display = 'none'; return; }
+    box.style.display = '';
+    box.innerHTML = '<h2 class="side-title">全局条件 <small>GLOBAL</small></h2>' +
+      list.map(function (g) {
+        var text = (typeof g === 'string') ? g : (g.zh || g.en || '');
+        return '<div class="global-clue">' + escapeHtml(text) + '</div>';
+      }).join('');
   }
 
   function renderBoard() {
@@ -603,6 +623,7 @@
     var placed = placementsMap();
     CASE.people.forEach(function (p) {
       var card = document.createElement('div');
+      card.dataset.pid = p.id;
       card.className = 'person-card' +
         (state.selected === p.id ? ' selected' : '') +
         (placed[p.id] ? ' placed' : '') +
@@ -647,7 +668,9 @@
     var map = {
       table: ICON.table, tv: ICON.tv, shelf: ICON.shelf, plant: ICON.plant,
       chair: ICON.chair, oil: ICON.oil, boulder: ICON.boulder,
-      lounge: ICON.lounge, carpet: ICON.carpet
+      lounge: ICON.lounge, carpet: ICON.carpet,
+      statue: ICON.statue, rubble: ICON.rubble,
+      display: ICON.display, stanchion: ICON.stanchion
     };
     return '<svg class="svg-obj" viewBox="0 0 40 40">' + (map[o.type] || '') + '</svg>';
   }
@@ -661,7 +684,11 @@
     oil: '<path d="M10 22 C10 14 18 10 20 10 C22 10 30 14 30 22 C30 29 25 32 20 32 C15 32 10 29 10 22 Z" fill="#3a3a3f"/><ellipse cx="17" cy="20" rx="3" ry="4" fill="#5c5c63"/>',
     boulder: '<path d="M10 30 C6 24 9 14 16 11 C24 7 33 13 32 21 C32 27 27 31 21 31 Z" fill="#9b9b96" stroke="#6c6c67" stroke-width="2"/><path d="M14 22 C16 18 20 16 24 16" fill="none" stroke="#c4c4bf" stroke-width="2"/>',
     lounge: '<rect x="7" y="14" width="26" height="8" rx="3" fill="#f3e3c2" stroke="#9a7b4e" stroke-width="2"/><rect x="7" y="22" width="26" height="5" rx="2" fill="#e6cf9f" stroke="#9a7b4e" stroke-width="2"/><rect x="26" y="12" width="6" height="16" rx="3" fill="#f0dcb4" stroke="#9a7b4e" stroke-width="2"/><line x1="11" y1="18" x2="24" y2="18" stroke="#c9ad77" stroke-width="1.5"/>',
-    carpet: '<rect x="6" y="8" width="28" height="24" rx="2" fill="#f27d72" stroke="#b54b42" stroke-width="2"/><rect x="10" y="12" width="20" height="16" rx="1" fill="none" stroke="#ffd0c8" stroke-width="1.6"/><line x1="20" y1="12" x2="20" y2="28" stroke="#ffd0c8" stroke-width="1.4"/>'
+    carpet: '<rect x="6" y="8" width="28" height="24" rx="2" fill="#f27d72" stroke="#b54b42" stroke-width="2"/><rect x="10" y="12" width="20" height="16" rx="1" fill="none" stroke="#ffd0c8" stroke-width="1.6"/><line x1="20" y1="12" x2="20" y2="28" stroke="#ffd0c8" stroke-width="1.4"/>',
+    statue: '<rect x="15" y="31" width="10" height="4" fill="#8f8a9e"/><path d="M20 8 C23 8 25 10 25 13 L25 24 L23 24 L23 30 L17 30 L17 24 L15 24 L15 13 C15 10 17 8 20 8 Z" fill="#d9d5e6" stroke="#5a5470" stroke-width="1.6"/><rect x="12" y="34" width="16" height="3" rx="1" fill="#b9b4c8" stroke="#5a5470" stroke-width="1.4"/>',
+    rubble: '<path d="M8 30 L12 20 L18 24 L22 15 L30 22 L32 30 Z" fill="#9a948a" stroke="#666057" stroke-width="1.6"/><path d="M12 20 L15 24 M22 15 L20 22" stroke="#b7b1a4" stroke-width="1.4" fill="none"/><ellipse cx="20" cy="32" rx="13" ry="2.4" fill="#00000022"/>',
+    display: '<rect x="6" y="9" width="28" height="20" rx="2" fill="#6f7a93" stroke="#3a4258" stroke-width="1.6"/><rect x="9" y="12" width="22" height="14" rx="1" fill="#9fc6d8"/><path d="M11 24 L16 17 L20 21 L24 15 L29 24 Z" fill="#7fa9bd"/><rect x="14" y="29" width="12" height="4" rx="1" fill="#5a6178"/>',
+    stanchion: '<rect x="18" y="10" width="4" height="20" rx="2" fill="#b7b0a0" stroke="#6e6858" stroke-width="1.5"/><circle cx="20" cy="9" r="3" fill="#c98a4f" stroke="#6e6858" stroke-width="1.3"/><rect x="13" y="30" width="14" height="3.4" rx="1.5" fill="#9a948a" stroke="#666057" stroke-width="1.3"/>'
   };
 
   // ---------- 弹窗 ----------
