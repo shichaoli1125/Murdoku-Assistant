@@ -111,154 +111,54 @@
   }
 
   /* ============================================================
-   * 悬停高亮：根据角色线索解析“相关约束”
-   *   - 区域：线索里肯定出现的区域名（否定句中的不算）
-   *   - 物品：线索里出现的物品关键词（椅子/油渍/架子/车/沙滩巾/巨石…）
-   * 角色自己已有的标记/放置格在悬停时实时扫描。
+   * 悬停高亮：直接读取题目配置里每个角色 clues[id].highlights
+   *   每项：{ type: region|object|row|col,
+   *           id: 区域id/物品type/行号/列号(0-based),
+   *           relationship: in|on|beside,
+   *           authenticity: affirmative|negative }
+   * 运行时只做“配置 -> 格子集合”的映射，不做任何文本解析。
    * ============================================================ */
-
-  // 物品类型 -> 线索中可能出现的词（英文正则 / 中文）
-  var OBJECT_WORDS = [
-    { type: 'boulder', en: /\bboulders?\b/, zh: ['巨石', '石头'] },
-    { type: 'carpet', en: /\bcarpets?\b/, zh: ['沙滩巾', '地毯'] },
-    { type: 'chair', en: /\bchairs?\b/, zh: ['椅子'] },
-    { type: 'oil', en: /\boil\s*slicks?\b|\boil\b/, zh: ['油渍'] },
-    { type: 'shelf', en: /\bshelves\b|\bshelf\b/, zh: ['置物架', '架子'] },
-    { type: 'car', en: /\bcars?\b/, zh: ['车'] },
-    { type: 'lounge', en: /\blounges?\b|\bbeds?\b/, zh: ['躺椅', '卧榻', '床'] },
-    { type: 'table', en: /\btables?\b/, zh: ['桌子', '桌'] },
-    { type: 'tv', en: /\btelevisions?\b|\btvs?\b/, zh: ['电视'] },
-    { type: 'plant', en: /\bplants?\b/, zh: ['植物', '盆栽'] }
-  ];
-
-  // 否定词：命中的分句视为否定，不参与区域高亮
-  var NEG_ZH = ['不', '没', '非'];
-  function clauseIsNeg(clause) {
-    var cl = clause.toLowerCase();
-    if (/\b(not|never|no)\b/.test(cl)) return true;
-    for (var i = 0; i < NEG_ZH.length; i++) if (clause.indexOf(NEG_ZH[i]) >= 0) return true;
-    return false;
-  }
-
-  function splitClauses(text) {
-    return text.split(/[.。!！?？;；]+/)
-      .map(function (s) { return s.trim(); })
-      .filter(Boolean);
-  }
-
-  var ROW_WORDS = ['row', '行'];
-  var COL_WORDS = ['column', 'col', '列'];
-  var NUM_WORDS = {
-    one: 1, two: 2, three: 3, four: 4, five: 5,
-    six: 6, seven: 7, eight: 8, nine: 9,
-    '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9
-  };
-
-  // 从分句里找“第 N 行/列”，返回 {row, col}（1-based，内部转 0-based）
-  function parseRowCol(cl) {
-    var res = {};
-    var lc = cl.toLowerCase();
-    function findNum(words) {
-      for (var i = 0; i < words.length; i++) {
-        var w = words[i];
-        var idx = lc.indexOf(w);
-        if (idx < 0) continue;
-        // 英文：the third row / row 3
-        var m = lc.match(/(\d+)\s*(?:st|nd|rd|th)?\s*(?:row|column|col)/) ||
-                lc.match(/(?:row|column|col)\s*(\d+)/) ||
-                lc.match(/(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)\s*(?:row|column|col)/);
-        if (m) {
-          if (m[1]) return parseInt(m[1], 10);
-          var ord = (m[0].match(/first|second|third|fourth|fifth|sixth|seventh|eighth|ninth/) || [])[0];
-          return ({first:1,second:2,third:3,fourth:4,fifth:5,sixth:6,seventh:7,eighth:8,ninth:9})[ord];
-        }
-        // 中文：第3行 / 第三行
-        var zm = cl.match(/第\s*([0-9一二三四五六七八九])\s*(行|列)/);
-        if (zm) return NUM_WORDS[zm[1]] || parseInt(zm[1], 10);
-      }
-      return null;
-    }
-    var rn = findNum(ROW_WORDS), cn = findNum(COL_WORDS);
-    if (rn) res.row = rn - 1;
-    if (cn) res.col = cn - 1;
-    return res;
-  }
-
   function buildHighlightTargets(c) {
-    var N = c.size;
-    var out = {};
+    var N = c.size, out = {};
     c.people.forEach(function (p) {
-      var clue = c.clues[p.id];
-      var text = (clue.en || '') + ' \n ' + (clue.zh || '');
-      var clauses = splitClauses(text);
-      var posRegion = {}, negRegion = {}, objectTypes = {}, rows = {}, cols = {};
-
-      clauses.forEach(function (cl) {
-        var neg = clauseIsNeg(cl);
-
-        // 区域（中文需排除物品复合词，如“沙滩巾”里的“沙滩”不算区域）
-        c.regions.forEach(function (reg) {
-          var hitEn = cl.toLowerCase().indexOf(reg.name.toLowerCase()) >= 0;
-          var hitZh = false;
-          if (reg.nameZh) {
-            var at = 0, idx;
-            while ((idx = cl.indexOf(reg.nameZh, at)) >= 0) {
-              var after = cl.charAt(idx + reg.nameZh.length);
-              if (after !== '巾' && after !== '毯') { hitZh = true; break; }
-              at = idx + reg.nameZh.length;
-            }
-          }
-          if (hitEn || hitZh) (neg ? negRegion : posRegion)[reg.id] = true;
-        });
-
-        // 物品
-        OBJECT_WORDS.forEach(function (ow) {
-          if (ow.en.test(cl) || ow.zh.some(function (z) { return cl.indexOf(z) >= 0; })) {
-            objectTypes[ow.type] = true;
-          }
-        });
-
-        // 行 / 列
-        var rc = parseRowCol(cl);
-        if (typeof rc.row === 'number') rows[rc.row] = true;
-        if (typeof rc.col === 'number') cols[rc.col] = true;
-      });
-
-      // 否定区域："not in X" => 命中除 X 外的全部区域
-      var finalRegions = {};
-      Object.keys(posRegion).forEach(function (r) { finalRegions[r] = true; });
-      Object.keys(negRegion).forEach(function (r) {
-        c.regions.forEach(function (reg) {
-          if (reg.id !== r && !negRegion[reg.id]) finalRegions[reg.id] = true;
-        });
-      });
-
-      // 汇总：每类命中独立收集（一格可同时命中 区域+物品+行+列）
-      var cellKinds = {};
+      var list = (c.clues[p.id] && c.clues[p.id].highlights) || [];
+      var cellKinds = {}, regionIds = {};
       function addKind(key, kind) {
         if (!cellKinds[key]) cellKinds[key] = {};
         cellKinds[key][kind] = true;
       }
-      c.regions.forEach(function (reg) {
-        if (!finalRegions[reg.id]) return;
-        reg.cells.forEach(function (cc) { addKind(cc[0] + ',' + cc[1], 'region'); });
-      });
-      Object.keys(rows).forEach(function (r) {
-        r = +r;
-        for (var cc = 0; cc < N; cc++) addKind(r + ',' + cc, 'row');
-      });
-      Object.keys(cols).forEach(function (cc) {
-        cc = +cc;
-        for (var r = 0; r < N; r++) addKind(r + ',' + cc, 'col');
-      });
-      Object.keys(objectAt).forEach(function (key) {
-        if (objectTypes[objectAt[key].type]) addKind(key, 'object');
+
+      list.forEach(function (h) {
+        var neg = h.authenticity === 'negative';
+        if (h.type === 'region') {
+          if (neg) {
+            // 否定该区域 => 命中除它以外的全部区域
+            c.regions.forEach(function (reg) {
+              if (reg.id === h.id) return;
+              regionIds[reg.id] = true;
+              reg.cells.forEach(function (cc) { addKind(cc[0] + ',' + cc[1], 'region'); });
+            });
+          } else {
+            var reg = c.regions.filter(function (r) { return r.id === h.id; })[0];
+            if (!reg) return;
+            regionIds[reg.id] = true;
+            reg.cells.forEach(function (cc) { addKind(cc[0] + ',' + cc[1], 'region'); });
+          }
+        } else if (h.type === 'object') {
+          // 命中所有同类型物品实际占据的格子（车每格都已登记）
+          Object.keys(objectAt).forEach(function (key) {
+            if (objectAt[key].type === h.id) addKind(key, 'object');
+          });
+        } else if (h.type === 'row') {
+          var r = +h.id;
+          for (var cc = 0; cc < N; cc++) addKind(r + ',' + cc, 'row');
+        } else if (h.type === 'col') {
+          var cc0 = +h.id;
+          for (var r2 = 0; r2 < N; r2++) addKind(r2 + ',' + cc0, 'col');
+        }
       });
 
-      out[p.id] = {
-        regionIds: finalRegions,
-        cellKinds: cellKinds
-      };
+      out[p.id] = { regionIds: regionIds, cellKinds: cellKinds };
     });
     return out;
   }

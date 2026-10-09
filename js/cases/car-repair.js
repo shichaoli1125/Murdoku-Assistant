@@ -96,13 +96,43 @@
     ],
 
     // 线索（官方原文 + 中文）
+    // 线索。highlights：人工根据线索给出的相关事物列表（渲染时直接读取，不做文本解析）
+    //   type: region/object/row/col  relationship: in/on/beside  authenticity: affirmative/negative
     clues: {
-      A: { en: 'He was in a car.', zh: '他在一辆车里。' },
-      B: { en: 'He was on an oil slick.', zh: '他在一块油渍上。' },
-      C: { en: 'She was sitting in a chair.', zh: '她坐在一把椅子上。' },
-      D: { en: 'She was alone in the Waiting Area.', zh: '她独自在等候区。' },
-      E: { en: 'He was beside a shelf.', zh: '他在一个置物架旁。' },
-      V: { en: 'The victim. He was alone with the murderer.', zh: '受害者，他与凶手独处一室。' }
+      A: {
+        en: 'He was in a car.', zh: '他在一辆车里。',
+        highlights: [
+          { type: 'object', id: 'car', relationship: 'in', authenticity: 'affirmative' }
+        ]
+      },
+      B: {
+        en: 'He was on an oil slick.', zh: '他在一块油渍上。',
+        highlights: [
+          { type: 'object', id: 'oil', relationship: 'on', authenticity: 'affirmative' }
+        ]
+      },
+      C: {
+        en: 'She was sitting in a chair.', zh: '她坐在一把椅子上。',
+        highlights: [
+          { type: 'object', id: 'chair', relationship: 'on', authenticity: 'affirmative' }
+        ]
+      },
+      D: {
+        en: 'She was alone in the Waiting Area.', zh: '她独自在等候区。',
+        highlights: [
+          { type: 'region', id: 'waiting', relationship: 'in', authenticity: 'affirmative' }
+        ]
+      },
+      E: {
+        en: 'He was beside a shelf.', zh: '他在一个置物架旁。',
+        highlights: [
+          { type: 'object', id: 'shelf', relationship: 'beside', authenticity: 'affirmative' }
+        ]
+      },
+      V: {
+        en: 'The victim. He was alone with the murderer.', zh: '受害者，他与凶手独处一室。',
+        highlights: []
+      }
     },
 
     // 官方标准答案

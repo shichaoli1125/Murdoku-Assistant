@@ -94,14 +94,52 @@
     ],
 
     // 线索（官方原文 + 中文）
+    // 线索。highlights：人工根据线索给出的相关事物列表（渲染时直接读取，不做文本解析）
+    //   type: region 区域 / object 物品 / row 行 / col 列
+    //   relationship: in 在…里 / on 在…上 / beside 在…旁
+    //   authenticity: affirmative 肯定 / negative 否定
     clues: {
-      A: { en: 'He was beside the boulder.', zh: '他在巨石旁。' },
-      B: { en: 'She was on a carpet.', zh: '她在沙滩巾上。' },
-      C: { en: 'She was sitting in a chair. She was not on the Beach.', zh: '她坐在椅子上，不在沙滩上。' },
-      D: { en: 'She was on the Beach.', zh: '她在沙滩上。' },
-      E: { en: 'He was beside a chair.', zh: '他在椅子旁。' },
-      F: { en: "He was alone in the Lifeguard's Tower.", zh: '他独自在救生塔里。' },
-      V: { en: 'The Victim. He was alone with the murderer.', zh: '受害者，他与凶手独处。' }
+      A: {
+        en: 'He was beside the boulder.', zh: '他在巨石旁。',
+        highlights: [
+          { type: 'object', id: 'boulder', relationship: 'beside', authenticity: 'affirmative' }
+        ]
+      },
+      B: {
+        en: 'She was on a carpet.', zh: '她在沙滩巾上。',
+        highlights: [
+          { type: 'object', id: 'carpet', relationship: 'on', authenticity: 'affirmative' }
+        ]
+      },
+      C: {
+        en: 'She was sitting in a chair. She was not on the Beach.', zh: '她坐在椅子上，不在沙滩上。',
+        highlights: [
+          { type: 'object', id: 'chair', relationship: 'on', authenticity: 'affirmative' },
+          { type: 'region', id: 'beach', relationship: 'in', authenticity: 'negative' }
+        ]
+      },
+      D: {
+        en: 'She was on the Beach.', zh: '她在沙滩上。',
+        highlights: [
+          { type: 'region', id: 'beach', relationship: 'in', authenticity: 'affirmative' }
+        ]
+      },
+      E: {
+        en: 'He was beside a chair.', zh: '他在椅子旁。',
+        highlights: [
+          { type: 'object', id: 'chair', relationship: 'beside', authenticity: 'affirmative' }
+        ]
+      },
+      F: {
+        en: "He was alone in the Lifeguard's Tower.", zh: '他独自在救生塔里。',
+        highlights: [
+          { type: 'region', id: 'tower', relationship: 'in', authenticity: 'affirmative' }
+        ]
+      },
+      V: {
+        en: 'The Victim. He was alone with the murderer.', zh: '受害者，他与凶手独处。',
+        highlights: []
+      }
     },
 
     // 官方标准答案（坐标 "r,c"）
