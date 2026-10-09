@@ -127,6 +127,7 @@
         if (!cellKinds[key]) cellKinds[key] = {};
         cellKinds[key][kind] = true;
       }
+      var characterIds = {};
 
       list.forEach(function (h) {
         var neg = h.authenticity === 'negative';
@@ -155,10 +156,13 @@
         } else if (h.type === 'col') {
           var cc0 = +h.id;
           for (var r2 = 0; r2 < N; r2++) addKind(r2 + ',' + cc0, 'col');
+        } else if (h.type === 'character') {
+          // 线索涉及其他角色：记录其角色 id，悬停时高亮对应角色卡
+          if (h.id && h.id !== p.id) characterIds[h.id] = true;
         }
       });
 
-      out[p.id] = { regionIds: regionIds, cellKinds: cellKinds };
+      out[p.id] = { regionIds: regionIds, cellKinds: cellKinds, characterIds: characterIds };
     });
     return out;
   }
@@ -596,6 +600,12 @@
     Array.prototype.forEach.call(board.querySelectorAll('.region-label'), function (lab) {
       if (regionIds[lab.getAttribute('data-region')]) lab.classList.add('label-spot');
     });
+
+    // 相关角色卡：线索涉及的其他角色（character 类型）
+    var characterIds = highlightTargets[pid] ? highlightTargets[pid].characterIds : {};
+    Array.prototype.forEach.call(document.querySelectorAll('.person-card'), function (other) {
+      if (characterIds[other.dataset.pid]) other.classList.add('hl-character');
+    });
   }
 
   function clearHighlight() {
@@ -613,6 +623,9 @@
     Array.prototype.forEach.call(board.querySelectorAll('.region-label'), function (lab) {
       lab.classList.remove('label-spot');
     });
+    Array.prototype.forEach.call(document.querySelectorAll('.person-card.hl-character'), function (c) {
+      c.classList.remove('hl-character');
+    });
   }
 
   function renderPeople() {
@@ -622,6 +635,7 @@
     CASE.people.forEach(function (p) {
       var card = document.createElement('div');
       card.dataset.pid = p.id;
+      card.style.setProperty('--accent', p.color);
       card.className = 'person-card' +
         (state.selected === p.id ? ' selected' : '') +
         (placed[p.id] ? ' placed' : '') +

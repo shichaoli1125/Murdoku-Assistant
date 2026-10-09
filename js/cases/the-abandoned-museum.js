@@ -129,7 +129,9 @@
       A: {
         en: 'She was exactly one column west of George.',
         zh: '她恰好在乔治西边一列。',
-        highlights: []
+        highlights: [
+          { type: 'character', id: 'G', relationship: 'west-of', authenticity: 'affirmative' }
+        ]
       },
       B: {
         en: 'She was sitting on a chair. She was alone with a man.',
@@ -142,7 +144,8 @@
         en: 'She was in the first column. She was south of Alysson.',
         zh: '她在第一列，在艾莉森南边。',
         highlights: [
-          { type: 'col', id: 0, relationship: 'in', authenticity: 'affirmative' }
+          { type: 'col', id: 0, relationship: 'in', authenticity: 'affirmative' },
+          { type: 'character', id: 'A', relationship: 'south-of', authenticity: 'affirmative' }
         ]
       },
       D: {
