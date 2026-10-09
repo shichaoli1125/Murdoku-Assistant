@@ -26,6 +26,132 @@
   // ---------- 状态 ----------
   var state = null;
 
+  // ---------- 多人联机同步 ----------
+  // 仅 placed/notes/x 属于共享进度；selected/tool/timer/history 为本地视图。
+  var sync = {
+    enabled: true,
+    caseId: null,
+    version: 0,
+    es: null,
+    inflight: null,        // 当前正在提交的 Promise
+    queuedPush: false,     // 提交期间又有改动 -> 完成后再推一次
+    applyingRemote: false, // 正在套用远程更新，避免回环推送
+    loaded: false
+  };
+
+  function apiBase() {
+    try {
+      if (window.location && /^https?:$/.test(window.location.protocol)) {
+        return window.location.origin + '/api';
+      }
+    } catch (e) {}
+    return '/api';
+  }
+
+  // 从当前棋盘提取需要共享的格子数据
+  function sharedCellsFromState() {
+    var out = {};
+    for (var k in state.cells) {
+      var cc = state.cells[k];
+      out[k] = { placed: cc.placed, notes: cc.notes.slice(), x: !!cc.x };
+    }
+    return out;
+  }
+
+  // 用服务器数据填充所有格子（保留格子骨架，只改值）
+  function adoptSharedCells(cells) {
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        var k = key(r, c), remote = cells[k] || {};
+        state.cells[k] = {
+          placed: (typeof remote.placed === 'string') ? remote.placed : null,
+          notes: Array.isArray(remote.notes) ? remote.notes.slice(0, 9) : [],
+          x: !!remote.x
+        };
+      }
+    }
+  }
+
+  // 拉取共享进度（打开案件时）
+  function fetchSharedState(caseId) {
+    return fetch(apiBase() + '/state/' + encodeURIComponent(caseId), { cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      });
+  }
+
+  // 提交当前完整进度；提交期间的新改动会在完成后自动再推一次
+  function pushSharedState() {
+    if (!sync.enabled || sync.applyingRemote || !sync.caseId) return Promise.resolve();
+    if (sync.inflight) { sync.queuedPush = true; return sync.inflight; }
+
+    var body = JSON.stringify({ cells: sharedCellsFromState() });
+    sync.inflight = fetch(apiBase() + '/state/' + encodeURIComponent(sync.caseId), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: body
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function (data) {
+      if (typeof data.version === 'number') sync.version = data.version;
+    }).catch(function (err) {
+      // 静默失败，不打断做题；SSE/下次操作会再对齐
+      if (window && window.console) console.warn('sync push failed:', err && err.message);
+    }).then(function () {
+      sync.inflight = null;
+      if (sync.queuedPush) { sync.queuedPush = false; return pushSharedState(); }
+    });
+
+    return sync.inflight;
+  }
+
+  // 套用一条远程更新（SSE 推送 / 初次快照）
+  function applyRemoteUpdate(data) {
+    if (!data || typeof data.version !== 'number') return;
+    // 版本不新于本地则忽略（去重、防回退）
+    if (data.version <= sync.version) return;
+    sync.version = data.version;
+    if (!data.cells) return;
+
+    sync.applyingRemote = true;
+    try {
+      adoptSharedCells(data.cells);
+      // 远程更新后清空本地撤销栈（本地 UNDO 无法回退他人操作，避免覆盖）
+      state.history = [];
+      // 若当前选中角色已被他人放置，则取消选中，避免后续操作落空
+      if (state.selected && isPersonPlaced(state.selected)) state.selected = null;
+      if (state.tool !== 'notes' && state.tool !== 'x' && state.tool !== 'erase') state.tool = 'notes';
+      // 若他人已放满且全对，本地不会自动弹窗（check 由各端自行触发）；仅刷新视图
+      render();
+    } finally {
+      sync.applyingRemote = false;
+    }
+  }
+
+  // 订阅某案件的实时更新
+  function subscribeCase(caseId) {
+    unsubscribeCase();
+    if (typeof window.EventSource === 'undefined') return;
+    sync.es = new EventSource(apiBase() + '/events/' + encodeURIComponent(caseId));
+    sync.es.onmessage = function (ev) {
+      var data;
+      try { data = JSON.parse(ev.data); } catch (e) { return; }
+      if (data.type === 'snapshot' || data.type === 'update') applyRemoteUpdate(data);
+    };
+    sync.es.onerror = function () {
+      // 浏览器会自动重连；这里无需额外处理
+    };
+  }
+
+  function unsubscribeCase() {
+    if (sync.es) {
+      try { sync.es.close(); } catch (e) {}
+      sync.es = null;
+    }
+  }
+
   function key(r, c) { return r + ',' + c; }
 
   function blankCells() {
@@ -104,10 +230,43 @@
     state = freshState();
     state.selected = c.people[0].id;
 
+    // 联机：重置同步状态，先渲染本地，再异步拉取共享进度并订阅更新
+    sync.caseId = c.id;
+    sync.version = 0;
+    sync.loaded = false;
+    sync.inflight = null;
+    sync.queuedPush = false;
+    sync.applyingRemote = false;
+
     resetTimer();
     hideAllModals();
     updateCaseHeader();
     render();
+
+    if (sync.enabled) {
+      subscribeCase(c.id);
+      fetchSharedState(c.id)
+        .then(function (data) {
+          if (sync.caseId !== c.id) return;      // 已切到别的题
+          if (typeof data.version === 'number') sync.version = data.version;
+          if (data.cells) {
+            sync.applyingRemote = true;
+            try {
+              adoptSharedCells(data.cells);
+              state.history = [];
+              render();
+            } finally {
+              sync.applyingRemote = false;
+            }
+          }
+          sync.loaded = true;
+        })
+        .catch(function () {
+          // 后端不可用时退化为本地单机模式
+          if (window.console) console.warn('sync fetch failed, local mode');
+          sync.loaded = true;
+        });
+    }
   }
 
   /* ============================================================
@@ -220,6 +379,7 @@
     startTimer();
     clearErrors();
     render();
+    pushSharedState();
   }
 
   function place(pid, k) {
@@ -236,6 +396,7 @@
     startTimer();
     clearErrors();
     render();
+    pushSharedState();
   }
 
   function unplace(pid) {
@@ -244,6 +405,7 @@
     state.selected = pid;   // 收回后选中该角色，方便重新放置
     clearErrors();
     render();
+    pushSharedState();
   }
 
   function toggleX(k) {
@@ -256,6 +418,7 @@
     startTimer();
     clearErrors();
     render();
+    pushSharedState();
   }
 
   // 橡皮擦点格子：清除该格内的标记 / X / 已放置角色
@@ -269,6 +432,7 @@
     startTimer();
     clearErrors();
     render();
+    pushSharedState();
   }
 
   function undo() {
@@ -277,6 +441,7 @@
     restore(prev);
     clearErrors();
     render();
+    pushSharedState();
   }
 
   function clearAll() {
@@ -287,6 +452,7 @@
     state.selected = CASE.people[0].id;   // 选中第一个角色
     clearErrors();
     render();
+    pushSharedState();
   }
 
   function clearErrors() { state.errors = {}; }

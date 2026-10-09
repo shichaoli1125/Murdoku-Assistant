@@ -7,3 +7,5 @@ official/
 *.tmp
 .secrets/
 _testdeps/
+data/
+__pycache__/
