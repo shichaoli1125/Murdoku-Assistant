@@ -84,13 +84,13 @@
 
     // 人物
     people: [
-      { id: 'A', name: 'Ashton', color: '#c0613f' },
-      { id: 'B', name: 'Brenda', color: '#d98a4f' },
-      { id: 'C', name: 'Carla', color: '#84d2cc' },
-      { id: 'D', name: 'Daryl', color: '#b579b0' },
-      { id: 'E', name: 'Earl', color: '#7c9970' },
-      { id: 'F', name: 'Fabian', color: '#5a86b8' },
-      { id: 'V', name: 'Valentino', color: '#6d6a8f', victim: true }
+      { id: 'A', name: 'Ashton', sex: 'male', color: '#c0613f' },
+      { id: 'B', name: 'Brenda', sex: 'female', color: '#d98a4f' },
+      { id: 'C', name: 'Carla', sex: 'female', color: '#84d2cc' },
+      { id: 'D', name: 'Daryl', sex: 'female', color: '#b579b0' },
+      { id: 'E', name: 'Earl', sex: 'male', color: '#7c9970' },
+      { id: 'F', name: 'Fabian', sex: 'male', color: '#5a86b8' },
+      { id: 'V', name: 'Valentino', sex: 'male', color: '#6d6a8f', victim: true }
     ],
 
     // 线索（官方原文 + 中文）

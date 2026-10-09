@@ -565,15 +565,12 @@
     var targetMap = {};          // k -> {kind:true}
     for (var k in staticHit) targetMap[k] = staticHit[k];
 
-    // 实时：该角色的标记 / 正式放置格
+    // 实时：仅正式放置格进入整格高亮；草稿标记只高亮字母本身（不高亮格子）
     for (var ck in state.cells) {
       var cc = state.cells[ck];
       if (cc.placed === pid) {
         targetMap[ck] = targetMap[ck] || {};
         targetMap[ck].placed = true;
-      } else if (cc.notes.indexOf(pid) >= 0) {
-        targetMap[ck] = targetMap[ck] || {};
-        targetMap[ck].note = true;
       }
     }
 
@@ -587,10 +584,11 @@
         el.classList.add('hl');
         Object.keys(kinds).forEach(function (kd) { el.classList.add('hl-' + kd); });
         el.style.setProperty('--hlc', person.color);
-        Array.prototype.forEach.call(el.querySelectorAll('.note-letter'), function (s) {
-          if (s.textContent === pid) s.classList.add('hl-letter');
-        });
       }
+      // 该角色的草稿字母：仅字母放大发光，不高亮所在格
+      Array.prototype.forEach.call(el.querySelectorAll('.note-letter'), function (s) {
+        if (s.textContent === pid) s.classList.add('hl-letter');
+      });
     });
 
     // 区域铭牌：仅高亮相关区域
@@ -632,7 +630,9 @@
         '<div class="avatar" style="--tc:' + p.color + '">' +
         '<svg viewBox="0 0 40 52"><path d="M20 6 C26 6 30 11 30 17 C30 23 26 26 25 27 C31 30 35 37 35 46 L5 46 C5 37 9 30 15 27 C14 26 10 23 10 17 C10 11 14 6 20 6 Z"/></svg>' +
         '<b>' + p.id + '</b></div>' +
-        '<div class="p-name">' + p.name + (p.victim ? ' <em>受害者</em>' : '') + '</div>' +
+        '<div class="p-name">' + p.name +
+        (p.sex ? ' <i class="sex ' + p.sex + '">' + (p.sex === 'female' ? '♀' : '♂') + '</i>' : '') +
+        (p.victim ? ' <em>受害者</em>' : '') + '</div>' +
         '<div class="clue">' + CASE.clues[p.id].zh +
         '<span class="clue-en">' + CASE.clues[p.id].en + '</span></div>';
       card.addEventListener('click', function () {

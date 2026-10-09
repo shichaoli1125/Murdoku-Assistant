@@ -87,12 +87,12 @@
 
     // 人物
     people: [
-      { id: 'A', name: 'Anthony', color: '#c0613f' },
-      { id: 'B', name: 'Brock', color: '#3f9b46' },
-      { id: 'C', name: 'Crystal', color: '#3aa6a0' },
-      { id: 'D', name: 'Diane', color: '#7f93c4' },
-      { id: 'E', name: 'Emilio', color: '#7d5aa0' },
-      { id: 'V', name: 'Vaughn', color: '#3f4d8f', victim: true }
+      { id: 'A', name: 'Anthony', sex: 'male', color: '#c0613f' },
+      { id: 'B', name: 'Brock', sex: 'male', color: '#3f9b46' },
+      { id: 'C', name: 'Crystal', sex: 'female', color: '#3aa6a0' },
+      { id: 'D', name: 'Diane', sex: 'female', color: '#7f93c4' },
+      { id: 'E', name: 'Emilio', sex: 'male', color: '#7d5aa0' },
+      { id: 'V', name: 'Vaughn', sex: 'male', color: '#3f4d8f', victim: true }
     ],
 
     // 线索（官方原文 + 中文）

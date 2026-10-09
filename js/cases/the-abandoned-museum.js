@@ -113,15 +113,15 @@
     ],
 
     people: [
-      { id: 'A', name: 'Alysson', color: '#c0613f' },
-      { id: 'B', name: 'Brenda', color: '#d98a4f' },
-      { id: 'C', name: 'Cynthia', color: '#5a9b8f' },
-      { id: 'D', name: 'Dylan', color: '#3f7a9b' },
-      { id: 'E', name: 'Elsa', color: '#b07a52' },
-      { id: 'F', name: 'Freya', color: '#9b6db0' },
-      { id: 'G', name: 'George', color: '#4f8a6b' },
-      { id: 'H', name: 'Hugh', color: '#7a6f9b' },
-      { id: 'V', name: 'Vicky', color: '#6d6a8f', victim: true }
+      { id: 'A', name: 'Alysson', sex: 'female', color: '#c0613f' },
+      { id: 'B', name: 'Brenda', sex: 'female', color: '#d98a4f' },
+      { id: 'C', name: 'Cynthia', sex: 'female', color: '#5a9b8f' },
+      { id: 'D', name: 'Dylan', sex: 'male', color: '#3f7a9b' },
+      { id: 'E', name: 'Elsa', sex: 'female', color: '#b07a52' },
+      { id: 'F', name: 'Freya', sex: 'female', color: '#9b6db0' },
+      { id: 'G', name: 'George', sex: 'male', color: '#4f8a6b' },
+      { id: 'H', name: 'Hugh', sex: 'male', color: '#7a6f9b' },
+      { id: 'V', name: 'Vicky', sex: 'female', color: '#6d6a8f', victim: true }
     ],
 
     // 线索。highlights：人工根据线索给出的相关事物（运行时直接读取，不做文本解析）
