@@ -465,6 +465,7 @@
   }
 
   function check() {
+    if (CASE.mapOnly) { flashStatus('题目尚未公布，暂无法检查', false); return; }
     clearErrors();
     var placed = placementsMap();
     var allCorrect = true;
@@ -490,7 +491,20 @@
     renderBoard();
     renderPeople();
     renderGlobalClues();
+    renderMapNotice();
     updateProgress();
+  }
+
+  function renderMapNotice() {
+    var box = document.getElementById('mapNotice');
+    if (!box) return;
+    if (CASE.mapOnly) {
+      box.style.display = 'block';
+      box.innerHTML = '<b>⏳ 题目即将公布</b><span>' + escapeHtml(CASE.noticeZh || '') + '</span>';
+    } else {
+      box.style.display = 'none';
+      box.innerHTML = '';
+    }
   }
 
   function escapeHtml(s) {
@@ -832,7 +846,7 @@
     document.getElementById('progress').textContent = count + ' / ' + CASE.people.length;
     document.getElementById('btnX').classList.toggle('active', state.tool === 'x');
     document.getElementById('btnErase').classList.toggle('active', state.tool === 'erase');
-    document.getElementById('btnCheck').disabled = count !== CASE.people.length;
+    document.getElementById('btnCheck').disabled = CASE.mapOnly || count !== CASE.people.length;
   }
 
   // ---------- SVG 物件 ----------

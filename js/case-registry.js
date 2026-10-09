@@ -33,21 +33,25 @@
       warn('区域覆盖格数 ' + Object.keys(seen).length + '，应为 ' + (n * n));
     }
 
-    // 人数应为 N，且含 1 名受害者
-    var victimCount = (c.people || []).filter(function (p) { return p.victim; }).length;
-    if ((c.people || []).length !== n) warn('人物数应为 ' + n);
-    if (victimCount !== 1) warn('受害者数量应为 1，当前 ' + victimCount);
+    // 人数应为 N，且含 1 名受害者（mapOnly 占位题题目未公布，暂不校验）
+    if (!c.mapOnly) {
+      var victimCount = (c.people || []).filter(function (p) { return p.victim; }).length;
+      if ((c.people || []).length !== n) warn('人物数应为 ' + n);
+      if (victimCount !== 1) warn('受害者数量应为 1，当前 ' + victimCount);
+    }
 
     // 答案：每行每列唯一，且不在不可站物件上
     var objAt = {};
     (c.objects || []).forEach(function (o) { objAt[o.r + ',' + o.c] = o; });
     var rows = {}, cols = {};
     Object.keys(c.answer || {}).forEach(function (pid) {
-      var parts = c.answer[pid].split(','), r = parts[0], col = parts[1];
+      var pos = c.answer[pid];
+      if (pos == null) return; // mapOnly：答案未公布
+      var parts = pos.split(','), r = parts[0], col = parts[1];
       if (rows[r]) warn('答案行重复 row ' + r);
       if (cols[col]) warn('答案列重复 col ' + col);
       rows[r] = 1; cols[col] = 1;
-      var o = objAt[c.answer[pid]];
+      var o = objAt[pos];
       if (o && o.occupiable === false) warn(pid + ' 的答案落在不可站物件 ' + c.answer[pid]);
     });
   }
