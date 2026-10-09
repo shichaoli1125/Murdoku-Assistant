@@ -134,6 +134,32 @@ body{
 .board.tool-erase .cell{cursor:cell}
 .board.tool-x .cell{cursor:crosshair}
 
+/* ---------- 悬停高亮 ---------- */
+.board.spotlighting .cell.hl-dim{opacity:.35;transition:opacity .12s}
+.board.spotlighting .cell.hl{z-index:15}
+/* 区域 / 物品：暖色框 */
+.cell.hl-region::after, .cell.hl-object::after{
+  content:"";position:absolute;inset:0;z-index:14;pointer-events:none;
+  box-shadow:inset 0 0 0 3px var(--hlc);border-radius:2px}
+.cell.hl-region::after{box-shadow:inset 0 0 0 4px var(--hlc)}
+/* 行 / 列：半透明铺色 */
+.cell.hl-row::after, .cell.hl-col::after{
+  content:"";position:absolute;inset:0;z-index:13;pointer-events:none;
+  background:var(--hlc);opacity:.14}
+.cell.hl-row.hl-col::after{opacity:.24}
+/* 标记 / 已放置：更强的高亮 + 微发光 */
+.cell.hl-note::after, .cell.hl-placed::after{
+  content:"";position:absolute;inset:0;z-index:14;pointer-events:none;
+  box-shadow:inset 0 0 0 4px var(--hlc), 0 0 10px 1px var(--hlc);border-radius:2px}
+/* 该角色的标记字母跳动放大 */
+.note-letter.hl-letter{
+  animation:hlpop .18s ease;transform:scale(1.28);
+  filter:drop-shadow(0 0 4px var(--hlc))}
+@keyframes hlpop{0%{transform:scale(1)}60%{transform:scale(1.45)}100%{transform:scale(1.28)}}
+.region-label.label-spot{box-shadow:0 0 0 2px rgba(179,139,77,.6),0 2px 6px rgba(0,0,0,.3)}
+/* 悬停角色卡时轻微抬升 */
+.person-card:hover{z-index:2}
+
 /* 跨格车图层 */
 .car-layer{position:absolute;z-index:1;pointer-events:none;display:flex;align-items:center}
 .car-layer .svg-car{width:100%;height:86%}

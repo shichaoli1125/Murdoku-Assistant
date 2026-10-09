@@ -6,3 +6,4 @@ official/
 *.log
 *.tmp
 .secrets/
+_testdeps/

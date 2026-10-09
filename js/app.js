@@ -21,6 +21,7 @@
   var CASE = null;
   var N = 0;
   var regionAt = {}, objectAt = {}, peopleById = {}, carGroups = {};
+  var highlightTargets = {};   // pid -> {regions:Set, cells:Set} 静态约束命中（区域/物品）
 
   // ---------- 状态 ----------
   var state = null;
@@ -98,6 +99,8 @@
       carGroups[k].c0 = Math.min.apply(null, carGroups[k].cols);
     });
 
+    highlightTargets = buildHighlightTargets(c);
+
     state = freshState();
     state.selected = c.people[0].id;
 
@@ -105,6 +108,151 @@
     hideAllModals();
     updateCaseHeader();
     render();
+  }
+
+  /* ============================================================
+   * 悬停高亮：根据角色线索解析“相关约束”
+   *   - 区域：线索里肯定出现的区域名（否定句中的不算）
+   *   - 物品：线索里出现的物品关键词（椅子/油渍/架子/车/沙滩巾/巨石…）
+   * 角色自己已有的标记/放置格在悬停时实时扫描。
+   * ============================================================ */
+
+  // 物品类型 -> 线索中可能出现的词（英文正则 / 中文）
+  var OBJECT_WORDS = [
+    { type: 'boulder', en: /\bboulders?\b/, zh: ['巨石', '石头'] },
+    { type: 'carpet', en: /\bcarpets?\b/, zh: ['沙滩巾', '地毯'] },
+    { type: 'chair', en: /\bchairs?\b/, zh: ['椅子'] },
+    { type: 'oil', en: /\boil\s*slicks?\b|\boil\b/, zh: ['油渍'] },
+    { type: 'shelf', en: /\bshelves\b|\bshelf\b/, zh: ['置物架', '架子'] },
+    { type: 'car', en: /\bcars?\b/, zh: ['车'] },
+    { type: 'lounge', en: /\blounges?\b|\bbeds?\b/, zh: ['躺椅', '卧榻', '床'] },
+    { type: 'table', en: /\btables?\b/, zh: ['桌子', '桌'] },
+    { type: 'tv', en: /\btelevisions?\b|\btvs?\b/, zh: ['电视'] },
+    { type: 'plant', en: /\bplants?\b/, zh: ['植物', '盆栽'] }
+  ];
+
+  // 否定词：命中的分句视为否定，不参与区域高亮
+  var NEG_ZH = ['不', '没', '非'];
+  function clauseIsNeg(clause) {
+    var cl = clause.toLowerCase();
+    if (/\b(not|never|no)\b/.test(cl)) return true;
+    for (var i = 0; i < NEG_ZH.length; i++) if (clause.indexOf(NEG_ZH[i]) >= 0) return true;
+    return false;
+  }
+
+  function splitClauses(text) {
+    return text.split(/[.。!！?？;；]+/)
+      .map(function (s) { return s.trim(); })
+      .filter(Boolean);
+  }
+
+  var ROW_WORDS = ['row', '行'];
+  var COL_WORDS = ['column', 'col', '列'];
+  var NUM_WORDS = {
+    one: 1, two: 2, three: 3, four: 4, five: 5,
+    six: 6, seven: 7, eight: 8, nine: 9,
+    '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9
+  };
+
+  // 从分句里找“第 N 行/列”，返回 {row, col}（1-based，内部转 0-based）
+  function parseRowCol(cl) {
+    var res = {};
+    var lc = cl.toLowerCase();
+    function findNum(words) {
+      for (var i = 0; i < words.length; i++) {
+        var w = words[i];
+        var idx = lc.indexOf(w);
+        if (idx < 0) continue;
+        // 英文：the third row / row 3
+        var m = lc.match(/(\d+)\s*(?:st|nd|rd|th)?\s*(?:row|column|col)/) ||
+                lc.match(/(?:row|column|col)\s*(\d+)/) ||
+                lc.match(/(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth)\s*(?:row|column|col)/);
+        if (m) {
+          if (m[1]) return parseInt(m[1], 10);
+          var ord = (m[0].match(/first|second|third|fourth|fifth|sixth|seventh|eighth|ninth/) || [])[0];
+          return ({first:1,second:2,third:3,fourth:4,fifth:5,sixth:6,seventh:7,eighth:8,ninth:9})[ord];
+        }
+        // 中文：第3行 / 第三行
+        var zm = cl.match(/第\s*([0-9一二三四五六七八九])\s*(行|列)/);
+        if (zm) return NUM_WORDS[zm[1]] || parseInt(zm[1], 10);
+      }
+      return null;
+    }
+    var rn = findNum(ROW_WORDS), cn = findNum(COL_WORDS);
+    if (rn) res.row = rn - 1;
+    if (cn) res.col = cn - 1;
+    return res;
+  }
+
+  function buildHighlightTargets(c) {
+    var N = c.size;
+    var out = {};
+    c.people.forEach(function (p) {
+      var clue = c.clues[p.id];
+      var text = (clue.en || '') + ' \n ' + (clue.zh || '');
+      var clauses = splitClauses(text);
+      var posRegion = {}, negRegion = {}, objectTypes = {}, rows = {}, cols = {};
+
+      clauses.forEach(function (cl) {
+        var neg = clauseIsNeg(cl);
+
+        // 区域
+        c.regions.forEach(function (reg) {
+          var hit = cl.toLowerCase().indexOf(reg.name.toLowerCase()) >= 0 ||
+                    (reg.nameZh && cl.indexOf(reg.nameZh) >= 0);
+          if (hit) (neg ? negRegion : posRegion)[reg.id] = true;
+        });
+
+        // 物品
+        OBJECT_WORDS.forEach(function (ow) {
+          if (ow.en.test(cl) || ow.zh.some(function (z) { return cl.indexOf(z) >= 0; })) {
+            objectTypes[ow.type] = true;
+          }
+        });
+
+        // 行 / 列
+        var rc = parseRowCol(cl);
+        if (typeof rc.row === 'number') rows[rc.row] = true;
+        if (typeof rc.col === 'number') cols[rc.col] = true;
+      });
+
+      // 否定区域："not in X" => 命中除 X 外的全部区域
+      var finalRegions = {};
+      Object.keys(posRegion).forEach(function (r) { finalRegions[r] = true; });
+      Object.keys(negRegion).forEach(function (r) {
+        c.regions.forEach(function (reg) {
+          if (reg.id !== r && !negRegion[reg.id]) finalRegions[reg.id] = true;
+        });
+      });
+
+      // 汇总：每类命中独立收集（一格可同时命中 区域+物品+行+列）
+      var cellKinds = {};
+      function addKind(key, kind) {
+        if (!cellKinds[key]) cellKinds[key] = {};
+        cellKinds[key][kind] = true;
+      }
+      c.regions.forEach(function (reg) {
+        if (!finalRegions[reg.id]) return;
+        reg.cells.forEach(function (cc) { addKind(cc[0] + ',' + cc[1], 'region'); });
+      });
+      Object.keys(rows).forEach(function (r) {
+        r = +r;
+        for (var cc = 0; cc < N; cc++) addKind(r + ',' + cc, 'row');
+      });
+      Object.keys(cols).forEach(function (cc) {
+        cc = +cc;
+        for (var r = 0; r < N; r++) addKind(r + ',' + cc, 'col');
+      });
+      Object.keys(objectAt).forEach(function (key) {
+        if (objectTypes[objectAt[key].type]) addKind(key, 'object');
+      });
+
+      out[p.id] = {
+        regionIds: finalRegions,
+        cellKinds: cellKinds
+      };
+    });
+    return out;
   }
 
   function updateCaseHeader() {
@@ -281,6 +429,8 @@
         var cc = cell(k);
         var el = document.createElement('div');
         el.className = 'cell';
+        el.setAttribute('data-r', r);
+        el.setAttribute('data-c', c);
         el.style.background = reg.color;
 
         var isCarPart = occ && occ.type === 'car';
@@ -390,6 +540,7 @@
       if (!reg.label) return;
       var lab = document.createElement('div');
       lab.className = 'region-label';
+      lab.setAttribute('data-region', reg.id);
       lab.style.top = (reg.label[0] / N * 100) + '%';
       lab.style.left = (reg.label[1] / N * 100) + '%';
       lab.innerHTML = '<b>' + reg.nameZh + '</b><span>' + reg.name + '</span>';
@@ -470,6 +621,76 @@
     place(state.selected, k);
   }
 
+  // ---------- 悬停高亮：应用 / 清除 ----------
+  var activeHover = null;
+
+  function boardCellEls() {
+    return Array.prototype.slice.call(document.getElementById('board').querySelectorAll('.cell'));
+  }
+
+  function applyHighlight(pid) {
+    clearHighlight();
+    activeHover = pid;
+    var person = peopleById[pid];
+    var staticHit = highlightTargets[pid] ? highlightTargets[pid].cellKinds : {};
+
+    var targetMap = {};          // k -> {kind:true}
+    for (var k in staticHit) targetMap[k] = staticHit[k];
+
+    // 实时：该角色的标记 / 正式放置格
+    for (var ck in state.cells) {
+      var cc = state.cells[ck];
+      if (cc.placed === pid) {
+        targetMap[ck] = targetMap[ck] || {};
+        targetMap[ck].placed = true;
+      } else if (cc.notes.indexOf(pid) >= 0) {
+        targetMap[ck] = targetMap[ck] || {};
+        targetMap[ck].note = true;
+      }
+    }
+
+    var board = document.getElementById('board');
+    board.classList.add('spotlighting');
+
+    boardCellEls().forEach(function (el) {
+      var r = el.getAttribute('data-r'), c = el.getAttribute('data-c'), ekey = r + ',' + c;
+      var kinds = targetMap[ekey];
+      if (kinds) {
+        el.classList.add('hl');
+        Object.keys(kinds).forEach(function (kd) { el.classList.add('hl-' + kd); });
+        el.style.setProperty('--hlc', person.color);
+        Array.prototype.forEach.call(el.querySelectorAll('.note-letter'), function (s) {
+          if (s.textContent === pid) s.classList.add('hl-letter');
+        });
+      } else {
+        el.classList.add('hl-dim');
+      }
+    });
+
+    // 区域铭牌：仅高亮相关区域
+    var regionIds = highlightTargets[pid] ? highlightTargets[pid].regionIds : {};
+    Array.prototype.forEach.call(board.querySelectorAll('.region-label'), function (lab) {
+      if (regionIds[lab.getAttribute('data-region')]) lab.classList.add('label-spot');
+    });
+  }
+
+  function clearHighlight() {
+    if (!activeHover) return;
+    activeHover = null;
+    var board = document.getElementById('board');
+    board.classList.remove('spotlighting');
+    boardCellEls().forEach(function (el) {
+      el.classList.remove('hl', 'hl-note', 'hl-placed', 'hl-region', 'hl-object', 'hl-row', 'hl-col', 'hl-dim');
+      el.style.removeProperty('--hlc');
+      Array.prototype.forEach.call(el.querySelectorAll('.note-letter'), function (s) {
+        s.classList.remove('hl-letter');
+      });
+    });
+    Array.prototype.forEach.call(board.querySelectorAll('.region-label'), function (lab) {
+      lab.classList.remove('label-spot');
+    });
+  }
+
   function renderPeople() {
     var wrap = document.getElementById('people');
     wrap.innerHTML = '';
@@ -493,6 +714,8 @@
         if (state.tool !== 'notes') state.tool = 'notes';
         render();
       });
+      card.addEventListener('mouseenter', function () { applyHighlight(p.id); });
+      card.addEventListener('mouseleave', clearHighlight);
       wrap.appendChild(card);
     });
   }
