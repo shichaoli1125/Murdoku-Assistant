@@ -135,7 +135,6 @@ body{
 .board.tool-x .cell{cursor:crosshair}
 
 /* ---------- 悬停高亮 ---------- */
-.board.spotlighting .cell.hl-dim{opacity:.35;transition:opacity .12s}
 .board.spotlighting .cell.hl{z-index:15}
 /* 区域 / 物品：暖色框 */
 .cell.hl-region::after, .cell.hl-object::after{
@@ -146,7 +145,7 @@ body{
 .cell.hl-row::after, .cell.hl-col::after{
   content:"";position:absolute;inset:0;z-index:13;pointer-events:none;
   background:var(--hlc);opacity:.14}
-.cell.hl-row.hl-col::after{opacity:.24}
+
 /* 标记 / 已放置：更强的高亮 + 微发光 */
 .cell.hl-note::after, .cell.hl-placed::after{
   content:"";position:absolute;inset:0;z-index:14;pointer-events:none;

@@ -196,11 +196,19 @@
       clauses.forEach(function (cl) {
         var neg = clauseIsNeg(cl);
 
-        // 区域
+        // 区域（中文需排除物品复合词，如“沙滩巾”里的“沙滩”不算区域）
         c.regions.forEach(function (reg) {
-          var hit = cl.toLowerCase().indexOf(reg.name.toLowerCase()) >= 0 ||
-                    (reg.nameZh && cl.indexOf(reg.nameZh) >= 0);
-          if (hit) (neg ? negRegion : posRegion)[reg.id] = true;
+          var hitEn = cl.toLowerCase().indexOf(reg.name.toLowerCase()) >= 0;
+          var hitZh = false;
+          if (reg.nameZh) {
+            var at = 0, idx;
+            while ((idx = cl.indexOf(reg.nameZh, at)) >= 0) {
+              var after = cl.charAt(idx + reg.nameZh.length);
+              if (after !== '巾' && after !== '毯') { hitZh = true; break; }
+              at = idx + reg.nameZh.length;
+            }
+          }
+          if (hitEn || hitZh) (neg ? negRegion : posRegion)[reg.id] = true;
         });
 
         // 物品
@@ -662,8 +670,6 @@
         Array.prototype.forEach.call(el.querySelectorAll('.note-letter'), function (s) {
           if (s.textContent === pid) s.classList.add('hl-letter');
         });
-      } else {
-        el.classList.add('hl-dim');
       }
     });
 
