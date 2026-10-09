@@ -63,16 +63,15 @@
     objects: [
       // 不可站
       { r: 5, c: 0, type: 'boulder', occupiable: false },
+      // 第一行 3 个卧榻（官方码 4，救生塔/更衣室内，不可站）
+      { r: 0, c: 1, type: 'lounge', occupiable: false },
+      { r: 0, c: 4, type: 'lounge', occupiable: false },
+      { r: 0, c: 5, type: 'lounge', occupiable: false },
 
       // 椅子（可站）
       { r: 1, c: 0, type: 'chair', occupiable: true },
       { r: 1, c: 6, type: 'chair', occupiable: true },
       { r: 4, c: 2, type: 'chair', occupiable: true },
-
-      // 躺椅（救生塔 / 更衣室，可站）
-      { r: 0, c: 1, type: 'lounge', occupiable: true },
-      { r: 0, c: 4, type: 'lounge', occupiable: true },
-      { r: 0, c: 5, type: 'lounge', occupiable: true },
 
       // 沙滩巾 / 地毯（可站）
       { r: 2, c: 1, type: 'carpet', occupiable: true },

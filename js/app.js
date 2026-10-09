@@ -172,11 +172,7 @@
       var arr = state.cells[other].notes, i;
       while ((i = arr.indexOf(pid)) >= 0) arr.splice(i, 1);
     }
-    // 自动选中下一个未放置角色
-    if (state.selected === pid) {
-      var next = CASE.people.find(function (pp) { return !isPersonPlaced(pp.id); });
-      if (next) state.selected = next.id;
-    }
+    state.selected = null;   // 放置后置空，需重新点角色卡才能继续
     startTimer();
     clearErrors();
     render();
@@ -228,6 +224,7 @@
     state.cells = blankCells();
     state.phase = 'solving';
     state.tool = 'notes';      // 清空后回到默认标记模式
+    state.selected = CASE.people[0].id;   // 选中第一个角色
     clearErrors();
     render();
   }
@@ -455,6 +452,7 @@
   function onTap(k, r, c) {
     if (state.tool === 'x') { toggleX(k); return; }
     if (state.tool === 'erase') { clearCell(k); return; }
+    if (!state.selected) return;                 // 未选中角色：点格子无操作
     var cc = cell(k);
     if (cc.placed) return;                       // 已放置：短按无反应
     if (cc.x || isBlocked(k) || rowColUsed(r, c)) return;   // X 格不可放标记
@@ -467,6 +465,7 @@
     if (state.tool === 'erase') { clearCell(k); return; }
     var cc = cell(k);
     if (cc.placed) { unplace(cc.placed); return; }   // 长按已放置格 = 收回
+    if (!state.selected) return;                 // 未选中角色：长按无操作
     if (cc.x || isBlocked(k) || rowColUsed(r, c)) return;   // X 格不可放人物
     place(state.selected, k);
   }
