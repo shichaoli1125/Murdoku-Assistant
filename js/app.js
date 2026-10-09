@@ -5,8 +5,9 @@
  *   快速点格子    = 写入/取消该嫌疑人彩色首字母草稿（每格最多 9 个，3x3）
  *   长按格子      = 正式放置嫌疑人；长按已放置格 = 收回
  *   X 工具        = 点格子打叉/取消
- *   橡皮擦长按    = 清空全盘
- *   UNDO          = 逐步撤销
+ *   橡皮擦        = 点一下进入橡皮擦，再点格子清除该格标记/角色
+ *   垃圾桶        = 点一下清空全盘
+ *   UNDO          = 逐步撤销（放置/X/清除均只占一步，可恢复）
  * ============================================================ */
 (function () {
   'use strict';
@@ -38,7 +39,7 @@
     return {
       cells: blankCells(),
       selected: null,
-      tool: 'notes',       // notes | x
+      tool: 'notes',       // notes | x | erase
       seconds: 0,
       phase: 'solving',    // solving | solved
       errors: {},
@@ -159,8 +160,12 @@
     pushHistory();
     var cc = cell(k);
     cc.placed = pid;
-    var i = cc.notes.indexOf(pid);
-    if (i >= 0) cc.notes.splice(i, 1);
+    cc.notes = [];                        // 放置：清除该格内所有标记
+    for (var other in state.cells) {      // 同时删除该角色在所有格子上的标记
+      if (other === k) continue;
+      var arr = state.cells[other].notes, i;
+      while ((i = arr.indexOf(pid)) >= 0) arr.splice(i, 1);
+    }
     startTimer();
     clearErrors();
     render();
@@ -183,6 +188,19 @@
     render();
   }
 
+  // 橡皮擦点格子：清除该格内的标记 / X / 已放置角色
+  function clearCell(k) {
+    var cc = cell(k);
+    if (!cc.placed && !cc.notes.length && !cc.x) return;
+    pushHistory();
+    cc.placed = null;
+    cc.notes = [];
+    cc.x = false;
+    startTimer();
+    clearErrors();
+    render();
+  }
+
   function undo() {
     var prev = state.history.pop();
     if (!prev) return;
@@ -195,6 +213,7 @@
     pushHistory();
     state.cells = blankCells();
     state.phase = 'solving';
+    state.tool = 'notes';      // 清空后回到默认标记模式
     clearErrors();
     render();
   }
@@ -240,6 +259,8 @@
     var board = document.getElementById('board');
     board.innerHTML = '';
     board.style.setProperty('--grid-size', N);
+    board.classList.toggle('tool-x', state.tool === 'x');
+    board.classList.toggle('tool-erase', state.tool === 'erase');
 
     for (var r = 0; r < N; r++) {
       for (var c = 0; c < N; c++) {
@@ -347,7 +368,7 @@
 
   // ---------- 单元格 tap / 长按 判定 ----------
   function bindCell(el, r, c) {
-    var k = key(r, c), timerId = null, fired = false, sx = 0, sy = 0;
+    var k = key(r, c), timerId = null, fired = false, sx = 0, sy = 0, downOnThis = false;
 
     function clearHold() {
       if (timerId) { clearTimeout(timerId); timerId = null; }
@@ -356,6 +377,7 @@
 
     el.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
+      downOnThis = true;                      // 本元素确实收到按下
       fired = false; sx = e.clientX; sy = e.clientY;
       el.classList.add('holding');
       timerId = setTimeout(function () {
@@ -363,7 +385,7 @@
         el.classList.remove('holding');
         el.classList.add('holdfire');
         setTimeout(function () { el.classList.remove('holdfire'); }, 220);
-        onHold(k, r, c);
+        onHold(k, r, c);                      // render() 会重建棋盘
       }, HOLD_MS);
     });
 
@@ -373,15 +395,20 @@
 
     el.addEventListener('pointerup', function () {
       clearHold();
-      if (!fired) onTap(k, r, c);
+      // 只有“在本元素按下、又在本元素抬起”才算 tap。
+      // 长按触发后旧格子被 render() 替换，新格子 downOnThis=false，
+      // 因而落在新格子上的 pointerup 不会被误判为 tap（修复收回残留标记）。
+      if (!fired && downOnThis) onTap(k, r, c);
+      downOnThis = false;
     });
 
-    el.addEventListener('pointercancel', clearHold);
+    el.addEventListener('pointercancel', function () { downOnThis = false; clearHold(); });
     el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
   }
 
   function onTap(k, r, c) {
     if (state.tool === 'x') { toggleX(k); return; }
+    if (state.tool === 'erase') { clearCell(k); return; }
     var cc = cell(k);
     if (cc.placed) return;                       // 已放置：短按无反应
     if (isBlocked(k) || rowColUsed(r, c)) return;
@@ -390,6 +417,7 @@
 
   function onHold(k, r, c) {
     if (state.tool === 'x') { toggleX(k); return; }
+    if (state.tool === 'erase') { clearCell(k); return; }
     var cc = cell(k);
     if (cc.placed) { unplace(cc.placed); return; }   // 长按已放置格 = 收回
     if (isBlocked(k) || rowColUsed(r, c)) return;
@@ -415,7 +443,7 @@
         '<span class="clue-en">' + CASE.clues[p.id].en + '</span></div>';
       card.addEventListener('click', function () {
         state.selected = p.id;
-        if (state.tool === 'x') state.tool = 'notes';
+        if (state.tool !== 'notes') state.tool = 'notes';
         render();
       });
       wrap.appendChild(card);
@@ -426,6 +454,7 @@
     var count = Object.keys(placementsMap()).length;
     document.getElementById('progress').textContent = count + ' / ' + CASE.people.length;
     document.getElementById('btnX').classList.toggle('active', state.tool === 'x');
+    document.getElementById('btnErase').classList.toggle('active', state.tool === 'erase');
     document.getElementById('btnCheck').disabled = count !== CASE.people.length;
   }
 
@@ -501,37 +530,20 @@
     sel.addEventListener('change', function () { loadCase(sel.value); });
   }
 
-  // ---------- 工具：X / 橡皮擦（长按清空）/ UNDO / 检查 ----------
+  // ---------- 工具：X / 橡皮擦 / 垃圾桶 / UNDO / 检查 ----------
   document.getElementById('btnX').addEventListener('click', function () {
     state.tool = state.tool === 'x' ? 'notes' : 'x';
     render();
   });
 
-  (function bindEraser() {
-    var er = document.getElementById('btnErase'), t = null, fired = false;
-    function cancel() {
-      if (t) { clearTimeout(t); t = null; }
-      er.classList.remove('holding');
-      try { er.releasePointerCapture && er._pid != null && er.releasePointerCapture(er._pid); } catch (e) {}
-    }
-    er.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      e.preventDefault();
-      fired = false;
-      try { er._pid = e.pointerId; er.setPointerCapture(e.pointerId); } catch (err) {}
-      er.classList.add('holding');
-      t = setTimeout(function () {
-        fired = true; t = null; er.classList.remove('holding'); clearAll();
-      }, 600);
-    });
-    er.addEventListener('pointerup', function () {
-      cancel();
-      if (!fired) flashStatus('长按橡皮擦可清空全盘', true);
-    });
-    er.addEventListener('pointercancel', cancel);
-    er.addEventListener('lostpointercapture', function () { if (t) { clearTimeout(t); t = null; } er.classList.remove('holding'); });
-    er.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-  })();
+  // 橡皮擦：点一下切换，再点格子清除该格标记/角色
+  document.getElementById('btnErase').addEventListener('click', function () {
+    state.tool = state.tool === 'erase' ? 'notes' : 'erase';
+    render();
+  });
+
+  // 垃圾桶：点一下清空全盘（可 UNDO 恢复）
+  document.getElementById('btnTrash').addEventListener('click', clearAll);
 
   document.getElementById('btnUndo').addEventListener('click', undo);
   document.getElementById('btnCheck').addEventListener('click', check);

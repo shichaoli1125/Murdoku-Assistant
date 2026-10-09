@@ -5,3 +5,4 @@ official/
 .DS_Store
 *.log
 *.tmp
+.secrets/
