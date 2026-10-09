@@ -530,6 +530,9 @@
     var board = document.getElementById('board');
     board.innerHTML = '';
     board.style.setProperty('--grid-size', N);
+    // 一格宽度：棋盘为容器查询上下文，1cqw = 棋盘宽 1%，N 格故 1 格 = 100cqw/N
+    board.style.setProperty('--cell', 'calc(100cqw / ' + N + ')');
+    board.dataset.size = N <= 9 ? 's' : 'l';
     board.classList.toggle('tool-x', state.tool === 'x');
     board.classList.toggle('tool-erase', state.tool === 'erase');
 

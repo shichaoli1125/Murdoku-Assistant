@@ -106,11 +106,20 @@ body{
 /* ---------- 棋盘 ---------- */
 .board-wrap{background:var(--panel);border-radius:16px;padding:16px}
 .board-wrap .side-title{color:var(--ink)}
+/* 大棋盘超出视口时允许横向滚动，不把格子压得极小 */
+.board-wrap{overflow:auto;max-width:100%}
 .board{
   display:grid;grid-template-columns:repeat(var(--grid-size,6),1fr);
   border:none;overflow:visible;
-  aspect-ratio:1/1;width:100%;max-width:720px;margin:0 auto;position:relative;
+  aspect-ratio:1/1;
+  /* 大图（格子多）整体放大：每格目标约 60px，但不超过视口 96% */
+  width:min(96vw, calc(var(--grid-size,6) * 60px));
+  margin:0 auto;position:relative;
+  /* 棋盘作为容器查询上下文；--cell = 一格宽 = 100cqw/N（JS 注入） */
+  container-type:inline-size;
 }
+/* 小图保持紧凑，沿用原 720px 舒适上限，避免被拉过大 */
+.board[data-size="s"]{width:100%;max-width:720px}
 .cell{
   position:relative;border:1px solid rgba(13,17,28,.25);
   cursor:pointer;overflow:hidden;user-select:none;touch-action:none;
@@ -126,13 +135,16 @@ body{
 .obj{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2}
 .obj svg{width:78%;height:78%}
 
-/* 彩色首字母草稿（3x3，最多 9） */
-.notes{position:absolute;top:2px;left:2px;right:2px;display:flex;flex-wrap:wrap;gap:0 2px;
+/* 彩色首字母草稿（3x3，最多 9）：尺寸随“一格宽”等比缩放。
+   系数以 N=6/cell≈120px 时的原 px 为基准（30px≈.25格，26px≈.22格） */
+.notes{position:absolute;top:calc(.017*var(--cell));left:calc(.017*var(--cell));right:calc(.017*var(--cell));
+  display:flex;flex-wrap:wrap;gap:0 calc(.017*var(--cell));
   pointer-events:none;z-index:3}
-.note-letter{width:30px;height:30px;display:flex;align-items:center;justify-content:center;
-  font-size:26px;font-weight:800;line-height:1;
-  -webkit-text-stroke:1.4px #000;paint-order:stroke;
-  text-shadow:0 0 2px rgba(0,0,0,.4)}
+.note-letter{width:calc(.28*var(--cell));height:calc(.28*var(--cell));
+  display:flex;align-items:center;justify-content:center;
+  font-size:calc(.22*var(--cell));font-weight:800;line-height:1;
+  -webkit-text-stroke:calc(.012*var(--cell)) #000;paint-order:stroke;
+  text-shadow:0 0 calc(.017*var(--cell)) rgba(0,0,0,.4)}
 
 /* 长按反馈 */
 .cell.holding::after, .tbtn.holding::after{
@@ -149,8 +161,8 @@ body{
 /* 区域 / 物品：暖色框 */
 .cell.hl-region::after, .cell.hl-object::after{
   content:"";position:absolute;inset:0;z-index:14;pointer-events:none;
-  box-shadow:inset 0 0 0 3px var(--hlc);border-radius:2px}
-.cell.hl-region::after{box-shadow:inset 0 0 0 4px var(--hlc)}
+  box-shadow:inset 0 0 0 calc(.025*var(--cell)) var(--hlc);border-radius:calc(.017*var(--cell))}
+.cell.hl-region::after{box-shadow:inset 0 0 0 calc(.033*var(--cell)) var(--hlc)}
 /* 行 / 列：半透明铺色 */
 .cell.hl-row::after, .cell.hl-col::after{
   content:"";position:absolute;inset:0;z-index:13;pointer-events:none;
@@ -159,13 +171,15 @@ body{
 /* 已放置：更强的高亮 + 微发光（草稿标记只放大字母，不高亮格子） */
 .cell.hl-placed::after{
   content:"";position:absolute;inset:0;z-index:14;pointer-events:none;
-  box-shadow:inset 0 0 0 4px var(--hlc), 0 0 10px 1px var(--hlc);border-radius:2px}
+  box-shadow:inset 0 0 0 calc(.033*var(--cell)) var(--hlc),
+    0 0 calc(.083*var(--cell)) calc(.008*var(--cell)) var(--hlc);border-radius:calc(.017*var(--cell))}
 /* 该角色的标记字母跳动放大 */
 .note-letter.hl-letter{
   animation:hlpop .18s ease;transform:scale(1.28);
-  filter:drop-shadow(0 0 4px var(--hlc))}
+  filter:drop-shadow(0 0 calc(.033*var(--cell)) var(--hlc))}
 @keyframes hlpop{0%{transform:scale(1)}60%{transform:scale(1.45)}100%{transform:scale(1.28)}}
-.region-label.label-spot{box-shadow:0 0 0 2px rgba(179,139,77,.6),0 2px 6px rgba(0,0,0,.3)}
+.region-label.label-spot{box-shadow:0 0 0 calc(.017*var(--cell)) rgba(179,139,77,.6),
+  0 calc(.017*var(--cell)) calc(.05*var(--cell)) rgba(0,0,0,.3)}
 /* 悬停角色卡时轻微抬升 */
 .person-card:hover{z-index:2}
 
@@ -175,27 +189,30 @@ body{
 
 /* 区域墙：棋盘级墙条，不随工具/重渲染消失 */
 .wall{position:absolute;background:var(--line);pointer-events:none;z-index:20}
-.wall-h{width:calc(100% / var(--grid-size));height:4px;transform:translateY(-2px)}
-.wall-v{height:calc(100% / var(--grid-size));width:4px;transform:translateX(-2px)}
+.wall-h{width:calc(100% / var(--grid-size));height:calc(.033*var(--cell));transform:translateY(calc(-.017*var(--cell)))}
+.wall-v{height:calc(100% / var(--grid-size));width:calc(.033*var(--cell));transform:translateX(calc(-.017*var(--cell)))}
 
-/* 区域名铭牌 */
+/* 区域名铭牌：随格子缩放，大棋盘设字号下限保证可读 */
 .region-label{position:absolute;z-index:3;transform:translate(-50%,-50%);
-  background:#fbfbf6;border:2px solid var(--line);border-radius:20px;
-  padding:2px 10px;display:flex;flex-direction:column;align-items:center;line-height:1.1;
-  pointer-events:none;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-.region-label b{font-size:13px;font-weight:800;color:#1c2230}
-.region-label span{font-size:9px;color:#5b5f6b;letter-spacing:.3px}
+  background:#fbfbf6;border:calc(.017*var(--cell)) solid var(--line);border-radius:calc(.167*var(--cell));
+  padding:calc(.017*var(--cell)) calc(.083*var(--cell));
+  display:flex;flex-direction:column;align-items:center;line-height:1.1;
+  pointer-events:none;white-space:nowrap;
+  box-shadow:0 calc(.008*var(--cell)) calc(.025*var(--cell)) rgba(0,0,0,.3)}
+.region-label b{font-size:max(11px,calc(.108*var(--cell)));font-weight:800;color:#1c2230}
+.region-label span{font-size:max(8px,calc(.075*var(--cell)));color:#5b5f6b;letter-spacing:calc(.0025*var(--cell))}
 
 /* X */
 .xmark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:3}
 .xmark svg{width:70%;height:70%}
-.xmark path{stroke:var(--crimson);stroke-width:3.5;fill:none;stroke-linecap:round}
+.xmark path{stroke:var(--crimson);stroke-width:calc(.029*var(--cell));fill:none;stroke-linecap:round}
 
 /* 棋子 */
 .token{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:4;pointer-events:none}
 .token svg{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);width:82%;height:90%;fill:var(--tc);
-  filter:drop-shadow(0 3px 3px rgba(0,0,0,.4))}
-.token-letter{position:relative;z-index:2;color:#fff;font-weight:900;font-size:15px;margin-bottom:8px}
+  filter:drop-shadow(0 calc(.025*var(--cell)) calc(.025*var(--cell)) rgba(0,0,0,.4))}
+.token-letter{position:relative;z-index:2;color:#fff;font-weight:900;
+  font-size:max(10px,calc(.125*var(--cell)));margin-bottom:calc(.067*var(--cell))}
 .token.victim svg{fill:var(--tc)}
 
 /* ---------- 状态提示 ---------- */
