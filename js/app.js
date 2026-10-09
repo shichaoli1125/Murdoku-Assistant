@@ -56,6 +56,12 @@
     return !!(o && o.occupiable === false);
   }
 
+  // 某角色是否已正式放置
+  function isPersonPlaced(pid) {
+    for (var k in state.cells) if (state.cells[k].placed === pid) return true;
+    return false;
+  }
+
   // 该行/列是否已有正式放置的人
   function rowColUsed(r, c) {
     for (var k in state.cells) {
@@ -166,6 +172,11 @@
       var arr = state.cells[other].notes, i;
       while ((i = arr.indexOf(pid)) >= 0) arr.splice(i, 1);
     }
+    // 自动选中下一个未放置角色
+    if (state.selected === pid) {
+      var next = CASE.people.find(function (pp) { return !isPersonPlaced(pp.id); });
+      if (next) state.selected = next.id;
+    }
     startTimer();
     clearErrors();
     render();
@@ -174,12 +185,14 @@
   function unplace(pid) {
     pushHistory();
     for (var k in state.cells) if (state.cells[k].placed === pid) state.cells[k].placed = null;
+    state.selected = pid;   // 收回后选中该角色，方便重新放置
     clearErrors();
     render();
   }
 
   function toggleX(k) {
     if (isBlocked(k)) return;          // 障碍物格不可打 X
+    if (cell(k).placed) return;        // 已有角色的格子不可打 X
     pushHistory();
     var cc = cell(k);
     cc.x = !cc.x;
@@ -305,7 +318,7 @@
         }
 
         var placedPid = cc.placed;
-        if (!placedPid && state.tool === 'notes' && rowColUsed(r, c)) el.classList.add('locked');
+        if (!placedPid && rowColUsed(r, c)) el.classList.add('locked');
         if (state.errors[k]) el.classList.add('error');
 
         if (placedPid) {
@@ -445,6 +458,7 @@
     var cc = cell(k);
     if (cc.placed) return;                       // 已放置：短按无反应
     if (cc.x || isBlocked(k) || rowColUsed(r, c)) return;   // X 格不可放标记
+    if (isPersonPlaced(state.selected)) return;  // 已放置（灰色）的角色不可再放标记
     toggleNote(k, state.selected);
   }
 
@@ -475,6 +489,7 @@
         '<div class="clue">' + CASE.clues[p.id].zh +
         '<span class="clue-en">' + CASE.clues[p.id].en + '</span></div>';
       card.addEventListener('click', function () {
+        if (placed[p.id]) return;                // 已放置（灰色）角色不可再选中
         state.selected = p.id;
         if (state.tool !== 'notes') state.tool = 'notes';
         render();
