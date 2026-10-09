@@ -179,6 +179,7 @@
   }
 
   function toggleX(k) {
+    if (isBlocked(k)) return;          // 障碍物格不可打 X
     pushHistory();
     var cc = cell(k);
     cc.x = !cc.x;
@@ -272,12 +273,6 @@
         el.className = 'cell';
         el.style.background = reg.color;
 
-        // 区域墙：与上/左邻不同区域则沿该边画粗黑墙（每道只画一次）
-        var walls = [];
-        if (r > 0 && regionAt[key(r - 1, c)].id !== reg.id) walls.push('inset 0 4px 0 var(--line)');
-        if (c > 0 && regionAt[key(r, c - 1)].id !== reg.id) walls.push('inset 4px 0 0 var(--line)');
-        if (walls.length) el.style.boxShadow = walls.join(',');
-
         var isCarPart = occ && occ.type === 'car';
         if (occ && !isCarPart) {
           if (occ.occupiable === false) el.classList.add('blocked-cell');
@@ -341,6 +336,44 @@
       layer.innerHTML = objSvg({ type: 'car', car: k });
       board.appendChild(layer);
     });
+
+    // 区域墙：棋盘级独立墙条（绝对定位、高层级，切工具/重渲染都不会消失）
+    for (var wr = 0; wr < N; wr++) {
+      for (var wc = 0; wc < N; wc++) {
+        var wreg = regionAt[key(wr, wc)];
+        // 上边（含棋盘外框 r=0）
+        if (wr === 0 || regionAt[key(wr - 1, wc)].id !== wreg.id) {
+          var hwall = document.createElement('div');
+          hwall.className = 'wall wall-h';
+          hwall.style.top = (wr / N * 100) + '%';
+          hwall.style.left = (wc / N * 100) + '%';
+          board.appendChild(hwall);
+        }
+        // 左边（含棋盘外框 c=0）
+        if (wc === 0 || regionAt[key(wr, wc - 1)].id !== wreg.id) {
+          var vwall = document.createElement('div');
+          vwall.className = 'wall wall-v';
+          vwall.style.top = (wr / N * 100) + '%';
+          vwall.style.left = (wc / N * 100) + '%';
+          board.appendChild(vwall);
+        }
+        // 底边 / 右边（棋盘外框）
+        if (wr === N - 1) {
+          var bwall = document.createElement('div');
+          bwall.className = 'wall wall-h';
+          bwall.style.top = '100%';
+          bwall.style.left = (wc / N * 100) + '%';
+          board.appendChild(bwall);
+        }
+        if (wc === N - 1) {
+          var rwall = document.createElement('div');
+          rwall.className = 'wall wall-v';
+          rwall.style.top = (wr / N * 100) + '%';
+          rwall.style.left = '100%';
+          board.appendChild(rwall);
+        }
+      }
+    }
 
     // 区域名铭牌
     CASE.regions.forEach(function (reg) {
@@ -411,7 +444,7 @@
     if (state.tool === 'erase') { clearCell(k); return; }
     var cc = cell(k);
     if (cc.placed) return;                       // 已放置：短按无反应
-    if (isBlocked(k) || rowColUsed(r, c)) return;
+    if (cc.x || isBlocked(k) || rowColUsed(r, c)) return;   // X 格不可放标记
     toggleNote(k, state.selected);
   }
 
@@ -420,7 +453,7 @@
     if (state.tool === 'erase') { clearCell(k); return; }
     var cc = cell(k);
     if (cc.placed) { unplace(cc.placed); return; }   // 长按已放置格 = 收回
-    if (isBlocked(k) || rowColUsed(r, c)) return;
+    if (cc.x || isBlocked(k) || rowColUsed(r, c)) return;   // X 格不可放人物
     place(state.selected, k);
   }
 

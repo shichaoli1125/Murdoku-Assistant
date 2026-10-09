@@ -98,7 +98,7 @@ body{
 .board-wrap .side-title{color:var(--ink)}
 .board{
   display:grid;grid-template-columns:repeat(var(--grid-size,6),1fr);
-  border:3px solid var(--line);border-radius:6px;overflow:hidden;background:var(--line);
+  border:none;overflow:visible;
   aspect-ratio:1/1;width:100%;max-width:720px;margin:0 auto;position:relative;
 }
 .cell{
@@ -137,6 +137,11 @@ body{
 /* 跨格车图层 */
 .car-layer{position:absolute;z-index:1;pointer-events:none;display:flex;align-items:center}
 .car-layer .svg-car{width:100%;height:86%}
+
+/* 区域墙：棋盘级墙条，不随工具/重渲染消失 */
+.wall{position:absolute;background:var(--line);pointer-events:none;z-index:20}
+.wall-h{width:calc(100% / var(--grid-size));height:4px;transform:translateY(-2px)}
+.wall-v{height:calc(100% / var(--grid-size));width:4px;transform:translateX(-2px)}
 
 /* 区域名铭牌 */
 .region-label{position:absolute;z-index:3;transform:translate(-50%,-50%);
