@@ -1,320 +1,367 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""Murdoku server: static hosting + online shared progress (rooms) + SSE sync.
+
+Zero third-party dependencies (Python 3 standard library only). This is the
+production counterpart of server.cjs; the HTTP API and behaviour are identical:
+
+    GET  /                     static files
+    GET  /api/health           {"ok": true}
+    GET  /api/state/<room>     current shared state JSON
+    GET  /api/events/<room>    Server-Sent Events live stream
+    POST /api/state/<room>     publish shared state {"v":..,"state":{..}}
+
+Env / defaults: PORT=80 (or MDK_PORT), HOST=0.0.0.0, MDK_DATA_DIR=./data.
 """
-Murdoku Assistant —— 多人联机后端（零第三方依赖，仅需 Python 3.6+）
-
-职责：
-  1. 托管静态页面（index.html / js / css），单端口即可访问；
-  2. 保存每个案件的共享做题进度（落盘 JSON，重启不丢）；
-  3. 提供实时同步：
-       GET  /api/state/<caseId>          读取共享进度
-       POST /api/state/<caseId>          提交完整进度（服务端自增版本并广播）
-       GET  /api/events/<caseId>         SSE 长连接，接收他人更新推送
-
-冲突策略：最后写入为准（last-write-wins）+ 实时广播，最终一致。
-"""
-
 import json
 import os
 import re
+import sys
 import threading
 import time
-import queue
-import mimetypes
-from http.server import BaseHTTPRequestHandler
-from http.server import HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 
-# ---------- 基本配置 ----------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.environ.get("MDK_DATA_DIR", os.path.join(BASE_DIR, "data"))
-HOST = os.environ.get("MDK_HOST", "0.0.0.0")
-PORT = int(os.environ.get("MDK_PORT", "80"))
-CASE_ID_RE = re.compile(r"^[A-Za-z0-9_\-]{1,64}$")
-
+ROOT = os.path.dirname(os.path.abspath(__file__))
+PORT = int(os.environ.get("PORT") or os.environ.get("MDK_PORT") or 80)
+HOST = os.environ.get("HOST", "0.0.0.0")
+DATA_DIR = os.path.abspath(os.environ.get("MDK_DATA_DIR") or os.path.join(ROOT, "data"))
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# ---------- 每个案件的状态、锁、SSE 订阅者 ----------
-class CaseRoom:
+TYPES = {
+    ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
+    ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp",
+    ".pdf": "application/pdf", ".ttf": "font/ttf", ".txt": "text/plain; charset=utf-8",
+}
+
+EMPTY = {
+    "placed": {}, "notes": {}, "cross": [], "marks": {}, "target": None,
+    "done": [], "eliminated": [], "memo": "", "cellMemo": {},
+}
+
+ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,60}$")
+CELL_RE = re.compile(r"^\d+$")
+
+
+def is_obj(x):
+    return isinstance(x, dict)
+
+
+def sanitize(value):
+    """Keep only shareable, expected-shape fields. Returns a new dict or None."""
+    if not is_obj(value):
+        return None
+
+    def cell_keyed(m, kind):
+        out = {}
+        if is_obj(m):
+            for k, v in m.items():
+                key = str(k)
+                if not CELL_RE.match(key):
+                    continue
+                if kind == "strArr" and isinstance(v, list):
+                    vals = [x for x in v if isinstance(x, str)]
+                    out[key] = list(dict.fromkeys(vals))[:64]
+                elif kind == "str" and isinstance(v, str):
+                    out[key] = v
+        return out
+
+    placed = {}
+    if is_obj(value.get("placed")):
+        for k, v in value["placed"].items():
+            key = str(k)
+            if not ID_RE.match(key) or key == "__proto__":
+                continue
+            if isinstance(v, int) and not isinstance(v, bool):
+                placed[key] = v
+
+    def str_list(name, limit):
+        v = value.get(name)
+        if not isinstance(v, list):
+            return []
+        return list(dict.fromkeys(x for x in v if isinstance(x, str)))[:limit]
+
+    cross = [x for x in (value.get("cross") if isinstance(value.get("cross"), list) else [])
+             if isinstance(x, int) and not isinstance(x, bool)]
+    cross = list(dict.fromkeys(cross))[:4096]
+
+    target = value.get("target")
+    target = target if isinstance(target, int) and not isinstance(target, bool) else None
+
+    memo = value.get("memo")
+    memo = memo[:100000] if isinstance(memo, str) else ""
+
+    return {
+        "placed": placed,
+        "notes": cell_keyed(value.get("notes"), "strArr"),
+        "marks": cell_keyed(value.get("marks"), "str"),
+        "cellMemo": cell_keyed(value.get("cellMemo"), "str"),
+        "cross": cross,
+        "done": str_list("done", 4096),
+        "eliminated": str_list("eliminated", 1024),
+        "target": target,
+        "memo": memo,
+    }
+
+
+# ---- room store -----------------------------------------------------------
+class Room:
+    __slots__ = ("v", "state", "mtime")
+
     def __init__(self):
-        self.lock = threading.Lock()
-        self.version = 0
-        self.cells = {}
-        self.subscribers = []   # list of queue.Queue
+        self.v = 0
+        self.state = json.loads(json.dumps(EMPTY))
+        self.mtime = 0
 
 
 ROOMS = {}
-ROOMS_GUARD = threading.Lock()
+SUBS = {}
+LOCK = threading.RLock()
 
 
-def get_room(case_id):
-    with ROOMS_GUARD:
-        room = ROOMS.get(case_id)
-        if room is None:
-            room = CaseRoom()
-            ROOMS[case_id] = room
-            _load_from_disk(case_id, room)
+def room_file(room_id):
+    return os.path.join(DATA_DIR, urllib_quote(room_id) + ".json")
+
+
+def urllib_quote(s):
+    from urllib.parse import quote
+    return quote(s, safe="")
+
+
+def load_room(room_id):
+    with LOCK:
+        if room_id in ROOMS:
+            return ROOMS[room_id]
+        room = Room()
+        try:
+            with open(room_file(room_id), "r", encoding="utf-8") as f:
+                raw = json.load(f)
+            if isinstance(raw, dict):
+                room.v = int(raw.get("v") or 0)
+                clean = sanitize(raw.get("state"))
+                if clean is not None:
+                    room.state = clean
+                room.mtime = int(raw.get("mtime") or 0)
+        except (FileNotFoundError, ValueError, OSError):
+            pass
+        ROOMS[room_id] = room
         return room
 
 
-def _state_path(case_id):
-    return os.path.join(DATA_DIR, case_id + ".json")
+def persist(room_id, room):
+    room.mtime = int(time.time() * 1000)
+    payload = json.dumps({"v": room.v, "state": room.state, "mtime": room.mtime})
+    tmp = room_file(room_id) + ".tmp"
+
+    def write():
+        try:
+            with open(tmp, "w", encoding="utf-8") as f:
+                f.write(payload)
+            os.replace(tmp, room_file(room_id))
+        except OSError as exc:
+            print("persist failed:", exc, file=sys.stderr)
+
+    threading.Thread(target=write, daemon=True).start()
 
 
-def _load_from_disk(case_id, room):
-    path = _state_path(case_id)
-    if not os.path.isfile(path):
-        return
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        room.version = int(data.get("version", 0))
-        room.cells = data.get("cells", {}) or {}
-    except Exception:
-        # 文件损坏不影响启动
-        pass
-
-
-def _save_to_disk(case_id, room):
-    path = _state_path(case_id)
-    tmp = path + ".tmp"
-    payload = json.dumps(
-        {"version": room.version, "cells": room.cells},
-        ensure_ascii=False,
-    )
-    with open(tmp, "w", encoding="utf-8") as f:
-        f.write(payload)
-    os.replace(tmp, path)
-
-
-def _broadcast(room, event):
+def broadcast(room_id, room):
+    with LOCK:
+        clients = list(SUBS.get(room_id, ()))
+    data = ("event:state\ndata:" +
+            json.dumps({"v": room.v, "state": room.state, "mtime": room.mtime}) +
+            "\n\n")
     dead = []
-    for q in list(room.subscribers):
-        try:
-            q.put_nowait(event)
-        except Exception:
+    for q in clients:
+        if not q.put(data):
             dead.append(q)
-    for q in dead:
-        try:
-            room.subscribers.remove(q)
-        except ValueError:
-            pass
+    if dead:
+        with LOCK:
+            for q in dead:
+                SUBS.get(room_id, set()).discard(q)
 
 
-# ---------- 静态文件 ----------
-CONTENT_TYPES = {
-    ".html": "text/html; charset=utf-8",
-    ".js": "application/javascript; charset=utf-8",
-    ".css": "text/css; charset=utf-8",
-    ".json": "application/json; charset=utf-8",
-    ".svg": "image/svg+xml",
-    ".png": "image/png",
-    ".jpg": "image/jpeg",
-    ".ico": "image/x-icon",
-    ".map": "application/json; charset=utf-8",
-}
+# ---- SSE per-client queue -------------------------------------------------
+class Client:
+    def __init__(self):
+        self.cond = threading.Condition()
+        self.queue = []
+        self.closed = False
+
+    def put(self, item):
+        with self.cond:
+            if self.closed:
+                return False
+            self.queue.append(item)
+            self.cond.notify()
+        return True
+
+    def get(self, timeout=25):
+        with self.cond:
+            if not self.queue:
+                self.cond.wait(timeout)
+            if self.queue:
+                return self.queue.pop(0)
+            return None
+
+    def close(self):
+        with self.cond:
+            self.closed = True
+            self.cond.notify_all()
 
 
-def safe_static_path(url_path):
-    # 去掉查询串
-    url_path = url_path.split("?", 1)[0].split("#", 1)[0]
-    if url_path == "" or url_path == "/":
-        rel = "index.html"
-    else:
-        rel = url_path.lstrip("/")
-    # 规范化并防止目录穿越
-    target = os.path.normpath(os.path.join(BASE_DIR, rel))
-    if target != BASE_DIR and not target.startswith(BASE_DIR + os.sep):
-        return None
-    return target
-
-
-# ---------- HTTP Handler ----------
+# ---- HTTP handler ---------------------------------------------------------
 class Handler(BaseHTTPRequestHandler):
-    server_version = "MurdokuSync/1.0"
-    protocol_version = "HTTP/1.1"
+    server_version = "Murdoku/1.0"
 
     def log_message(self, fmt, *args):
-        # 简洁日志（可按需打开）
-        pass
+        pass  # quiet
 
-    # ---- 工具 ----
-    def _send_json(self, obj, status=200, extra_headers=None):
-        body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
-        self.send_response(status)
+    def _json(self, code, obj):
+        body = json.dumps(obj).encode("utf-8")
+        self.send_response(code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
-        if extra_headers:
-            for k, v in extra_headers.items():
-                self.send_header(k, v)
+        self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
 
-    def _match_api(self, prefix):
-        p = self.path.split("?", 1)[0]
-        tag = prefix
-        if p.startswith(tag):
-            case_id = p[len(tag):]
-            if CASE_ID_RE.match(case_id or ""):
-                return case_id
-        return None
-
-    # ---- 路由 ----
     def do_GET(self):
-        case_id = self._match_api("/api/state/")
-        if case_id is not None:
-            return self._handle_get_state(case_id)
+        self._route(read=False)
 
-        case_id = self._match_api("/api/events/")
-        if case_id is not None:
-            return self._handle_sse(case_id)
-
-        return self._handle_static()
+    def do_HEAD(self):
+        self._route(read=True)
 
     def do_POST(self):
-        case_id = self._match_api("/api/state/")
-        if case_id is None:
-            self._send_json({"error": "not found"}, status=404)
-            return
-        return self._handle_post_state(case_id)
+        from urllib.parse import urlparse, unquote
+        parsed = urlparse(self.path)
+        pname = unquote(parsed.path)
 
-    # ---- API: 读取状态 ----
-    def _handle_get_state(self, case_id):
-        room = get_room(case_id)
-        with room.lock:
-            self._send_json({"version": room.version, "cells": room.cells})
-
-    # ---- API: 提交状态 ----
-    def _handle_post_state(self, case_id):
-        length = int(self.headers.get("Content-Length", "0") or "0")
-        if length <= 0 or length > 2_000_000:
-            self._send_json({"error": "bad length"}, status=400)
+        m = re.match(r"^/api/state/([^/]+)$", pname)
+        if not m:
+            self._json(404, {"error": "not found"})
             return
-        raw = self.rfile.read(length)
+        room_id = m.group(1)
+        length = int(self.headers.get("Content-Length") or 0)
+        if length > 2 * 1024 * 1024:
+            self._json(413, {"error": "payload too large"})
+            return
+        raw = self.rfile.read(length) if length else b""
         try:
-            data = json.loads(raw.decode("utf-8"))
-            cells = data.get("cells")
-            if not isinstance(cells, dict):
-                raise ValueError("cells must be an object")
-            # 轻量校验：key 形如 "r,c"，值为对象
-            clean = {}
-            for k, v in cells.items():
-                if not re.match(r"^\d{1,3},\d{1,3}$", str(k)):
-                    continue
-                if not isinstance(v, dict):
-                    continue
-                placed = v.get("placed")
-                notes = v.get("notes", [])
-                xflag = bool(v.get("x"))
-                if placed is not None and not (isinstance(placed, str) and len(placed) <= 4):
-                    placed = None
-                if not isinstance(notes, list):
-                    notes = []
-                notes = [n for n in notes if isinstance(n, str) and len(n) <= 4][:9]
-                clean[k] = {"placed": placed, "notes": notes, "x": xflag}
-        except Exception:
-            self._send_json({"error": "bad json"}, status=400)
+            payload = json.loads(raw.decode("utf-8"))
+        except (ValueError, UnicodeDecodeError):
+            self._json(400, {"error": "bad json"})
+            return
+        clean = sanitize(payload.get("state") if isinstance(payload, dict) else None)
+        if clean is None:
+            self._json(400, {"error": "invalid state"})
+            return
+        base_v = payload.get("v")
+        try:
+            base_v = int(base_v)
+        except (TypeError, ValueError):
+            base_v = 0
+        with LOCK:
+            room = load_room(room_id)
+            room.v += 1
+            room.state = clean
+            persist(room_id, room)
+        broadcast(room_id, room)
+        self._json(200, {"v": room.v, "state": room.state})
+
+    def _route(self, read):
+        from urllib.parse import urlparse, unquote
+        parsed = urlparse(self.path)
+        pname = unquote(parsed.path)
+
+        if pname.startswith("/api/"):
+            if pname == "/api/health":
+                self._json(200, {"ok": True, "rooms": len(ROOMS)})
+                return
+            m_state = re.match(r"^/api/state/([^/]+)$", pname)
+            m_events = re.match(r"^/api/events/([^/]+)$", pname)
+            if m_state:
+                room = load_room(m_state.group(1))
+                self._json(200, {"v": room.v, "state": room.state, "mtime": room.mtime})
+                return
+            if m_events:
+                self._sse(m_events.group(1))
+                return
+            self._json(404, {"error": "not found"})
             return
 
-        room = get_room(case_id)
-        with room.lock:
-            room.version += 1
-            room.cells = clean
-            try:
-                _save_to_disk(case_id, room)
-            except Exception:
-                pass
-            event = {
-                "type": "update",
-                "version": room.version,
-                "cells": room.cells,
-            }
-            _broadcast(room, event)
-            self._send_json({"version": room.version, "cells": room.cells})
+        # static
+        rel = "/index.html" if pname == "/" else pname
+        file_path = os.path.normpath(os.path.join(ROOT, rel.lstrip("/")))
+        if not file_path.startswith(ROOT + os.sep) and file_path != ROOT:
+            self.send_error(403, "Forbidden")
+            return
+        try:
+            st = os.stat(file_path)
+            if not os.path.isfile(file_path):
+                raise OSError
+        except OSError:
+            self.send_error(404, "Not found")
+            return
+        ext = os.path.splitext(file_path)[1].lower()
+        self.send_response(200)
+        self.send_header("Content-Type", TYPES.get(ext, "application/octet-stream"))
+        self.send_header("Cache-Control", "no-cache")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Content-Length", str(st.st_size))
+        self.end_headers()
+        if read:
+            return
+        try:
+            with open(file_path, "rb") as f:
+                while True:
+                    chunk = f.read(64 * 1024)
+                    if not chunk:
+                        break
+                    self.wfile.write(chunk)
+        except (BrokenPipeError, ConnectionResetError):
+            pass
 
-    # ---- SSE ----
-    def _handle_sse(self, case_id):
-        room = get_room(case_id)
-        q = queue.Queue()
-        with room.lock:
-            snapshot = {"version": room.version, "cells": room.cells}
-            room.subscribers.append(q)
-
+    def _sse(self, room_id):
+        room = load_room(room_id)
+        client = Client()
+        with LOCK:
+            SUBS.setdefault(room_id, set()).add(client)
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream; charset=utf-8")
-        self.send_header("Cache-Control", "no-cache")
+        self.send_header("Cache-Control", "no-store, no-transform")
         self.send_header("Connection", "keep-alive")
         self.send_header("X-Accel-Buffering", "no")
         self.end_headers()
-
-        def write(payload):
-            self.wfile.write(payload)
-            self.wfile.flush()
-
         try:
-            # 连接建立先推一次当前全量，避免漏掉
-            write(("data: " + json.dumps(
-                {"type": "snapshot", "version": snapshot["version"],
-                 "cells": snapshot["cells"]}, ensure_ascii=False) + "\n\n").encode("utf-8"))
-
+            self.wfile.write(b"retry:2000\n\n")
+            first = ("event:state\ndata:" +
+                     json.dumps({"v": room.v, "state": room.state, "mtime": room.mtime}) +
+                     "\n\n").encode("utf-8")
+            self.wfile.write(first)
+            self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            client.close()
+            return
+        last_ping = time.time()
+        try:
             while True:
-                try:
-                    event = q.get(timeout=15)
-                except queue.Empty:
-                    write(b": ping\n\n")
-                    continue
-                write(("data: " + json.dumps(event, ensure_ascii=False) + "\n\n").encode("utf-8"))
+                item = client.get(25)
+                if item is not None:
+                    self.wfile.write(item.encode("utf-8"))
+                    self.wfile.flush()
+                else:
+                    now = time.time()
+                    if now - last_ping >= 25:
+                        self.wfile.write(b":ping\n\n")
+                        self.wfile.flush()
+                        last_ping = now
         except (BrokenPipeError, ConnectionResetError):
             pass
-        except Exception:
-            pass
         finally:
-            with room.lock:
-                try:
-                    room.subscribers.remove(q)
-                except ValueError:
-                    pass
-
-    # ---- 静态 ----
-    def _handle_static(self):
-        target = safe_static_path(self.path)
-        if target and os.path.isfile(target):
-            try:
-                with open(target, "rb") as f:
-                    body = f.read()
-            except Exception:
-                self._send_plain(500, b"read error")
-                return
-            ext = os.path.splitext(target)[1].lower()
-            ctype = CONTENT_TYPES.get(ext) or mimetypes.guess_type(target)[0] or "application/octet-stream"
-            self.send_response(200)
-            self.send_header("Content-Type", ctype)
-            self.send_header("Content-Length", str(len(body)))
-            # HTML 不缓存，静态资源可短缓存
-            if ext == ".html":
-                self.send_header("Cache-Control", "no-cache")
-            self.end_headers()
-            self.wfile.write(body)
-        else:
-            # SPA 兜底：未知路径回首页
-            idx = os.path.join(BASE_DIR, "index.html")
-            if os.path.isfile(idx):
-                with open(idx, "rb") as f:
-                    body = f.read()
-                self.send_response(200)
-                self.send_header("Content-Type", "text/html; charset=utf-8")
-                self.send_header("Content-Length", str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
-            else:
-                self._send_plain(404, b"not found")
-
-    def _send_plain(self, status, body):
-        self.send_response(status)
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+            client.close()
+            with LOCK:
+                SUBS.get(room_id, set()).discard(client)
 
 
 class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
@@ -324,14 +371,12 @@ class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
 
 def main():
     server = ThreadingHTTPServer((HOST, PORT), Handler)
-    print("Murdoku sync server listening on %s:%d" % (HOST, PORT), flush=True)
-    print("data dir: %s" % DATA_DIR, flush=True)
+    print(f"Murdoku sync server listening on {HOST}:{PORT}")
+    print(f"data dir: {DATA_DIR}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         pass
-    finally:
-        server.server_close()
 
 
 if __name__ == "__main__":

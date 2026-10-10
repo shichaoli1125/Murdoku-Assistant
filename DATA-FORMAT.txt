@@ -1,0 +1,94 @@
+Murdoku Local puzzle schema — version 1
+
+先通过页面“导出 / 分享 > 仅导出题目”导出完整示例作为模板。
+亦可修改 data.js 的 MURDOKU_PUZZLES 数组。无网络请求，直接 file: 打开也能读取。
+
+必填根字段
+version: 1
+id: 唯一字母数字 ID，可带 - 和 _。结构发生变化时建议换一个 ID。
+title: 中文或英文标题
+size: 正方形边长，支持 3 到 40（比赛为 24）
+rooms: [{id:"hall",name:"门厅",color:"#e7d9c3"}]
+cells: 长度为 size*size 的数组，从左到右、从上到下排列。
+  {room:"hall",blocked:false,object:"chair",label:"椅子",
+   walls:["top"], edges:{right:"window"}}
+  room 与 rooms.id 对应。blocked 必须为布尔值，独立于 object。
+  object 可选：plant,tree,flag,cart,tee,flower,bush,chair,bench,rug,table,shelf,barrel,water,chest,bed,rock。
+  未知 object 用菱形代替，label 保留原始物品名称。
+  walls 可选：top/right/bottom/left，额外的墙。
+  edges 可选：top/right/bottom/left 对应 door/window。
+  相邻格 room 不同会自动画区域边界。
+people: [{id:"A",symbol:"A",name:"艾达",color:"#af5e54",victim:false,gender:"f"}]
+  最多 40 人。gender 可省略，m/f；不能单凭头像臆造属性。
+clues: [{id:"c1",person:"A",text:"艾达在门厅第 1 行。",
+  refs:[{label:"门厅",type:"room",value:"hall"},{label:"第 1 行",type:"row",value:0}]}]
+  person 可省略（公共线索）。refs 可省略，只提供视觉高亮，不代表自动验证条件。
+  refs.type: room/object/row/col/person/cells。cells 的 value 是格子索引数组。
+
+规则与可选字段
+rules: {rowUnique:true,colUnique:true,murder:true}
+  murder 为 true 时需要一个且只有一个 victim:true 人物。
+  行列检查是最多一个人；常规 N×N 有 N 人，全部放置后等价于每行每列恰好一个。
+  treasure:true 表示寻宝题；people 中需要恰好一个 treasure:true 对象，计入行列占位。
+  该对象可设置 canOccupyBlocked:true；其他人物禁止此字段。
+  未设置 rules.treasure 的旧题仍可使用独立的目标旗标。
+kind: "demo" / "template" / "custom" / "reference" / "contest"
+subtitle, description, difficulty, source: 纯文本
+hints: 纯文本字符串数组
+background: 棋盘底图，可为 ./assets/... 或 PNG/JPEG/WebP 的 data URI；不加载外部资源。
+solution: {"A":1,"B":13,...} 可选；只有拥有可靠答案时才能提供。
+targetSolution: 格子索引，可选。对应宝藏旗标目标，用于已知答案检查。
+
+constraints: 可选，已人工编码、可自动检查的线索条件数组。
+每个条件都需要 person 和 type，可选 message（冲突时显示）。
+  {type:"row",person:"A",value:0}                 零起始行
+  {type:"col",person:"A",value:1}                 零起始列
+  {type:"room",person:"A",value:"hall"}           所在区域
+  {type:"object",person:"A",value:"chair"}        所在格物品
+  {type:"cells",person:"A",cells:[1,2,3]}         允许的格子
+  {type:"adjacentObject",person:"A",value:"tree"} 同区域内正交相邻物品
+  {type:"relative",person:"A",other:"B",direction:"north"}
+    direction: north/south/east/west/northwest/northeast/southwest/southeast/diagonal/adjacent
+    diagonal 为 45 度；adjacent 要求同区域。
+  {type:"alone",person:"A"}
+  {type:"with",person:"A",other:"B"}
+  {type:"aloneWith",person:"A",other:"B"}
+  {type:"corner",person:"A"}                      区域角落
+  暂未落位人物的约束返回“未知”。未编码的文字线索必须人工核对。
+  更复杂的赛题约束应在收到 PDF 后按实际定义扩展 engine.js，不能把猜测当成正式规则。
+
+完整存档结构
+{format:"murdoku-local-save",version:1,puzzle:{上述题目},state:{...},history:[],future:[],settings:{...}}
+导入会校验题目与状态。导入同 ID 案件时先下载旧案件备份。
+不要用 JSON 执行脚本；所有线索都按纯文本渲染。
+
+原站风格扩展字段（可选）
+titleZh: 中文标题。clues[].textZh: 中文证词。hintsZh: 中文提示数组。
+people[].portrait: ./assets/xxx.svg 的本地头像（文件随播放器保存）。
+rooms[].number: 球洞等区域的数字编号。
+rooms[].labelX / labelY: 区域标签在棋盘上的相对位置（0–1）。
+cells[].color: 覆盖区域颜色，用于同一个逻辑区域内的多种地板。
+cells[].texture: grass / sand / water；textureColor 为 #RRGGBB。
+同一区域的不同地板仍须使用同一 room，以免误画边界或误判同区域关系。
+rules.roomParity: true 时，所有人物落位后，人数奇偶须与 rooms[].number 一致。
+{type:"roomCompare",person:"B",other:"H",comparison:"gt"} 区域编号更大。
+{type:"roomCompare",person:"F",other:"N",comparison:"notPrevious"} 区域编号不是另一人的前一个。
+{type:"roomContains",person:"H",gender:"f",object:"cart"} 同区域存在指定性别且位于指定物品的人。
+state.eliminated: 被手动划除嫌疑人的 ID 数组，只是笔记，不影响规则或答案。
+
+正式寻宝题扩展
+mapArtwork:true：完整 PDF 原图作为底图，隐藏程序绘制的地板、物品和墙线。
+labelOverlay: ./assets/xxx.svg，原图区域名称覆盖层，显示在棋盘标记上方。
+pdf: ./assets/xxx.pdf，内置原件路径；pdfName 为显示的文件名。
+people[].traits: ["hat","eyepatch"]，仅从原件中明确可见的画作记录。
+{type:"relative",person:"S",other:"L",direction:"north",minRows:6}
+  北 / 南方向可设最少行差；不限制列。
+{type:"rowWitness",person:"C",offset:-8,cells:[...],excludeTreasure:true}
+  指定相差 offset 行的占位人物，必须在 cells 中；可排除宝藏。
+{type:"adjacentColumnTrait",person:"H",trait:"hat",negate:true}
+  两侧相邻列不能出现指定特征的人物。
+{type:"roomContains",person:"I",trait:"eyepatch"}
+  同区域内至少有另一位具备指定特征的人物。
+复杂静态条件（如“在吊床上且该列没有袋子”）可转录为 cells 允许位置集合。
+contest-puzzle.json 是当前完整示例；所有格子索引均从 0 开始。
+迁移文件时需同时复制 assets；JSON 导出保留本地素材引用。

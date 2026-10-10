@@ -1,0 +1,50 @@
+Treasure Hunt PDF transcription audit
+24 × 24 / 23 pirates + Treasure / 17 areas
+No standard solution or generated hint has been added.
+
+OBJECTS (1-based coordinates)
+fire: R3 C21, R10 C4
+tree: R1 C15, R2 C10, R3 C8, R3 C16, R4 C2, R4 C11, R4 C14, R5 C9, R6 C5, R9 C6, R11 C21, R12 C17, R13 C22, R14 C19, R23 C11, R23 C21, R24 C12, R24 C18
+flower: R5 C6, R11 C16, R12 C21, R21 C9, R22 C11, R23 C10
+shark: R11 C11, R13 C1, R15 C3, R20 C1, R22 C3
+sack: R1 C20, R8 C7, R14 C11, R15 C10, R16 C22, R18 C24
+pig: R10 C20, R14 C21, R14 C23, R15 C22, R16 C5
+tombstone: R2 C14
+crate: R1 C21, R2 C19, R9 C16, R11 C20, R13 C10, R16 C8, R16 C13, R18 C5, R18 C8, R20 C10, R20 C20
+rope: R10 C16, R16 C7, R18 C6
+barrel: R7 C9, R9 C10, R12 C6, R16 C20, R16 C24, R18 C10, R18 C15, R20 C9, R23 C2
+shelf: R1 C6, R14 C14, R16 C23, R21 C20
+bush: R1 C1, R2 C9, R4 C13, R5 C5, R6 C7, R23 C23
+table: R1 C4, R16 C15, R18 C21, R18 C22, R19 C23, R19 C24, R20 C23, R21 C23, R22 C13
+rock: R2 C2, R2 C20, R4 C19, R4 C22, R9 C2, R13 C19, R17 C3, R21 C8, R22 C1, R22 C8, R24 C7
+bed: R1 C5, R2 C5, R14 C15, R15 C15, R22 C14, R23 C14
+chair: R3 C4, R15 C13, R17 C15, R17 C22, R19 C21, R19 C22, R20 C22, R21 C16, R21 C24
+hammock: R1 C22, R1 C23, R5 C20, R5 C21, R8 C10, R8 C11, R10 C1, R10 C2, R20 C6, R20 C7
+
+DOORS: R3 C5, R4 C5, R17 C13, R18 C13, R21 C12, R21 C13, R21 C22, R22 C22
+
+ROOM GRID
+woods woods woods cabin-a cabin-a cabin-a woods woods woods woods woods woods woods woods woods woods woods cavern cavern cavern cavern cavern cavern cavern
+woods woods woods cabin-a cabin-a cabin-a woods woods woods woods woods woods woods woods woods woods woods cavern cavern cavern cavern cavern cavern cavern
+woods woods woods cabin-a cabin-a cabin-a woods woods woods woods woods woods woods woods woods woods cavern cavern cavern cavern cavern cavern cavern cavern
+woods woods woods woods woods woods woods woods woods woods woods woods woods woods woods cavern cavern cavern cavern cavern cavern cavern cavern cavern
+woods woods woods woods woods woods woods woods woods woods beach beach beach beach beach beach beach beach cavern cavern cavern cavern cavern cavern
+beach woods woods woods woods woods woods woods beach beach beach beach beach water water water water water water water water water cavern cavern
+beach beach woods woods woods woods woods beach beach beach beach beach water water water water water water water water water water water water
+beach beach beach beach beach beach beach beach beach beach beach water water water water water water water water water water water water water
+beach beach beach beach beach beach beach beach beach water water water water water frigate-a frigate-a frigate-a water water water water water water water
+beach beach beach beach beach beach beach water water water water water water water frigate-a frigate-a frigate-a clearing clearing clearing clearing water water water
+beach beach beach beach beach water water water water water water water clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing water water
+water water water water sloop-a sloop-a water water water water water clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing water
+water water water water water water water water water dock dock clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing
+water sloop-b sloop-b water water water water sloop-c sloop-c dock dock clearing cabin-b cabin-b cabin-b clearing clearing clearing clearing clearing clearing clearing clearing clearing
+water water water water water water water water water dock dock clearing cabin-b cabin-b cabin-b clearing clearing clearing clearing clearing clearing clearing clearing clearing
+water water water water galleon galleon galleon galleon dock dock dock clearing cabin-b cabin-b cabin-b clearing clearing clearing clearing tavern tavern tavern tavern tavern
+water water water water galleon galleon galleon galleon dock dock clearing clearing cabin-b cabin-b cabin-b cabin-b clearing clearing clearing tavern tavern tavern tavern tavern
+water water water water galleon galleon galleon galleon dock dock clearing clearing clearing cabin-b cabin-b cabin-b clearing clearing tavern tavern tavern tavern tavern tavern
+water water water water water dock dock dock dock dock clearing clearing clearing clearing clearing clearing clearing clearing tavern tavern tavern tavern tavern tavern
+water water water water water dock dock dock dock dock clearing clearing clearing clearing clearing clearing clearing clearing tavern tavern tavern tavern tavern tavern
+water water water water water cliff cliff cliff clearing clearing clearing clearing cabin-c cabin-c cabin-c cabin-c clearing clearing clearing tavern tavern tavern tavern tavern
+water water water water water cliff cliff cliff clearing clearing clearing clearing cabin-c cabin-c cabin-c cabin-c clearing clearing clearing clearing clearing clearing clearing clearing
+frigate-b frigate-b frigate-b water water cliff cliff clearing clearing clearing clearing clearing clearing cabin-c cabin-c cabin-c clearing clearing clearing clearing clearing clearing clearing clearing
+frigate-b frigate-b frigate-b water water water cliff clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing clearing

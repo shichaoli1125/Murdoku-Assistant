@@ -1,0 +1,4667 @@
+{
+  "version": 1,
+  "id": "contest1-treasurehunt-2026",
+  "kind": "contest",
+  "title": "The Treasure Hunt",
+  "titleZh": "寻宝大赛",
+  "subtitle": "Murdoku Contest #1",
+  "size": 24,
+  "rooms": [
+    {
+      "id": "woods",
+      "name": "Woods",
+      "nameZh": "树林",
+      "color": "#8fcc9a",
+      "kind": "terrain"
+    },
+    {
+      "id": "beach",
+      "name": "Beach",
+      "nameZh": "海滩",
+      "color": "#f7eab5",
+      "kind": "terrain"
+    },
+    {
+      "id": "cavern",
+      "name": "Cavern",
+      "nameZh": "洞穴",
+      "color": "#a8b7c7",
+      "kind": "terrain"
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "nameZh": "水域",
+      "color": "#a0ceea",
+      "kind": "terrain"
+    },
+    {
+      "id": "clearing",
+      "name": "Clearing",
+      "nameZh": "空地",
+      "color": "#9cd389",
+      "kind": "terrain"
+    },
+    {
+      "id": "dock",
+      "name": "Dock",
+      "nameZh": "码头",
+      "color": "#bea792",
+      "kind": "terrain"
+    },
+    {
+      "id": "cliff",
+      "name": "Cliff",
+      "nameZh": "悬崖",
+      "color": "#a8b7c7",
+      "kind": "terrain"
+    },
+    {
+      "id": "cabin-a",
+      "name": "Cabin A",
+      "nameZh": "小屋 A",
+      "color": "#cec7a1",
+      "kind": "cabin"
+    },
+    {
+      "id": "cabin-b",
+      "name": "Cabin B",
+      "nameZh": "小屋 B",
+      "color": "#cec7a1",
+      "kind": "cabin"
+    },
+    {
+      "id": "cabin-c",
+      "name": "Cabin C",
+      "nameZh": "小屋 C",
+      "color": "#cec7a1",
+      "kind": "cabin"
+    },
+    {
+      "id": "tavern",
+      "name": "Tavern",
+      "nameZh": "酒馆",
+      "color": "#cec7a1",
+      "kind": "terrain"
+    },
+    {
+      "id": "sloop-a",
+      "name": "Sloop A",
+      "nameZh": "单桅帆船 A",
+      "color": "#ead19c",
+      "kind": "ship"
+    },
+    {
+      "id": "sloop-b",
+      "name": "Sloop B",
+      "nameZh": "单桅帆船 B",
+      "color": "#ead19c",
+      "kind": "ship"
+    },
+    {
+      "id": "sloop-c",
+      "name": "Sloop C",
+      "nameZh": "单桅帆船 C",
+      "color": "#ead19c",
+      "kind": "ship"
+    },
+    {
+      "id": "frigate-a",
+      "name": "Frigate A",
+      "nameZh": "护卫舰 A",
+      "color": "#ead19c",
+      "kind": "ship"
+    },
+    {
+      "id": "frigate-b",
+      "name": "Frigate B",
+      "nameZh": "护卫舰 B",
+      "color": "#ead19c",
+      "kind": "ship"
+    },
+    {
+      "id": "galleon",
+      "name": "Galleon",
+      "nameZh": "大帆船",
+      "color": "#ead19c",
+      "kind": "ship"
+    }
+  ],
+  "cells": [
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "bush",
+      "label": "Shrub / 灌木"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "bed",
+      "label": "Bed / 床"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "shelf",
+      "label": "Shelf / 书架"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "sack",
+      "label": "Sack / 袋子"
+    },
+    {
+      "room": "cavern",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "bed",
+      "label": "Bed / 床"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "bush",
+      "label": "Shrub / 灌木"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tombstone",
+      "label": "Tombstone / 墓碑"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "cavern",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "cabin-a",
+      "blocked": false,
+      "color": "#cec7a1",
+      "edges": {
+        "bottom": "door"
+      }
+    },
+    {
+      "room": "cabin-a",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "fire",
+      "label": "Fire / 火堆"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a",
+      "edges": {
+        "top": "door"
+      }
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "bush",
+      "label": "Shrub / 灌木"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "bush",
+      "label": "Shrub / 灌木"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "flower",
+      "label": "Flowers / 花丛"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": true,
+      "color": "#8fcc9a",
+      "object": "bush",
+      "label": "Shrub / 灌木"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cavern",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "woods",
+      "blocked": false,
+      "color": "#8fcc9a"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": true,
+      "color": "#f7eab5",
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": true,
+      "color": "#f7eab5",
+      "object": "sack",
+      "label": "Sack / 袋子"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": true,
+      "color": "#f7eab5",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": true,
+      "color": "#f7eab5",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "frigate-a",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "frigate-a",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "frigate-a",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": true,
+      "color": "#f7eab5",
+      "object": "fire",
+      "label": "Fire / 火堆"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "frigate-a",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "frigate-a",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "rope",
+      "label": "Rope / 绳索"
+    },
+    {
+      "room": "frigate-a",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "pig",
+      "label": "Pig / 猪"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "beach",
+      "blocked": false,
+      "color": "#f7eab5"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "shark",
+      "label": "Shark / 鲨鱼"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "flower",
+      "label": "Flowers / 花丛"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "sloop-a",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "sloop-a",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "flower",
+      "label": "Flowers / 花丛"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "shark",
+      "label": "Shark / 鲨鱼"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "dock",
+      "blocked": true,
+      "color": "#bea792",
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "sloop-b",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "sloop-b",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "sloop-c",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "sloop-c",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": true,
+      "color": "#bea792",
+      "object": "sack",
+      "label": "Sack / 袋子"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "shelf",
+      "label": "Shelf / 书架"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "bed",
+      "label": "Bed / 床"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "pig",
+      "label": "Pig / 猪"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "pig",
+      "label": "Pig / 猪"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "shark",
+      "label": "Shark / 鲨鱼"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "dock",
+      "blocked": true,
+      "color": "#bea792",
+      "object": "sack",
+      "label": "Sack / 袋子"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "bed",
+      "label": "Bed / 床"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "pig",
+      "label": "Pig / 猪"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "galleon",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "pig",
+      "label": "Pig / 猪"
+    },
+    {
+      "room": "galleon",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "galleon",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "rope",
+      "label": "Rope / 绳索"
+    },
+    {
+      "room": "galleon",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "sack",
+      "label": "Sack / 袋子"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "shelf",
+      "label": "Shelf / 书架"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "galleon",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "galleon",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "galleon",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "galleon",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1",
+      "edges": {
+        "bottom": "door"
+      }
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "galleon",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "galleon",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "rope",
+      "label": "Rope / 绳索"
+    },
+    {
+      "room": "galleon",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "galleon",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": true,
+      "color": "#bea792",
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389",
+      "edges": {
+        "top": "door"
+      }
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "cabin-b",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "sack",
+      "label": "Sack / 袋子"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "shark",
+      "label": "Shark / 鲨鱼"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792",
+      "object": "hammock",
+      "label": "Hammock / 吊床"
+    },
+    {
+      "room": "dock",
+      "blocked": false,
+      "color": "#bea792"
+    },
+    {
+      "room": "dock",
+      "blocked": true,
+      "color": "#bea792",
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "dock",
+      "blocked": true,
+      "color": "#bea792",
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "crate",
+      "label": "Crate / 木箱"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "cliff",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cliff",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cliff",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "flower",
+      "label": "Flowers / 花丛"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389",
+      "edges": {
+        "right": "door"
+      }
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1",
+      "edges": {
+        "left": "door"
+      }
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "shelf",
+      "label": "Shelf / 书架"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1",
+      "edges": {
+        "bottom": "door"
+      }
+    },
+    {
+      "room": "tavern",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "tavern",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "chair",
+      "label": "Chair / 椅子"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": true,
+      "color": "#a0ceea",
+      "object": "shark",
+      "label": "Shark / 鲨鱼"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "cliff",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cliff",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cliff",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "flower",
+      "label": "Flowers / 花丛"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": true,
+      "color": "#cec7a1",
+      "object": "table",
+      "label": "Table / 桌子"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "bed",
+      "label": "Bed / 床"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#e0dca4",
+      "edges": {
+        "top": "door"
+      }
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "frigate-b",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "frigate-b",
+      "blocked": true,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ],
+      "object": "barrel",
+      "label": "Barrel / 木桶"
+    },
+    {
+      "room": "frigate-b",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "cliff",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "cliff",
+      "blocked": false,
+      "color": "#a8b7c7"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "flower",
+      "label": "Flowers / 花丛"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1",
+      "object": "bed",
+      "label": "Bed / 床"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "cabin-c",
+      "blocked": false,
+      "color": "#cec7a1"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "bush",
+      "label": "Shrub / 灌木"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "frigate-b",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "frigate-b",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "frigate-b",
+      "blocked": false,
+      "color": "#ead19c",
+      "tags": [
+        "ship"
+      ]
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "water",
+      "blocked": false,
+      "color": "#a0ceea"
+    },
+    {
+      "room": "cliff",
+      "blocked": true,
+      "color": "#a8b7c7",
+      "object": "rock",
+      "label": "Boulder / 巨石"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": true,
+      "color": "#9cd389",
+      "object": "tree",
+      "label": "Tree / 树"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    },
+    {
+      "room": "clearing",
+      "blocked": false,
+      "color": "#9cd389"
+    }
+  ],
+  "people": [
+    {
+      "id": "A",
+      "symbol": "A",
+      "name": "Augustus",
+      "nameZh": "Augustus",
+      "color": "#9c8654",
+      "portrait": "./assets/contest-person-A.svg",
+      "gender": "m",
+      "traits": [
+        "hat"
+      ]
+    },
+    {
+      "id": "B",
+      "symbol": "B",
+      "name": "Bart",
+      "nameZh": "Bart",
+      "color": "#76669c",
+      "portrait": "./assets/contest-person-B.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "C",
+      "symbol": "C",
+      "name": "Cedric",
+      "nameZh": "Cedric",
+      "color": "#488299",
+      "portrait": "./assets/contest-person-C.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "D",
+      "symbol": "D",
+      "name": "Dudley",
+      "nameZh": "Dudley",
+      "color": "#8f7754",
+      "portrait": "./assets/contest-person-D.svg",
+      "gender": "m",
+      "traits": [
+        "hat"
+      ]
+    },
+    {
+      "id": "E",
+      "symbol": "E",
+      "name": "Eiko",
+      "nameZh": "Eiko",
+      "color": "#a76580",
+      "portrait": "./assets/contest-person-E.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "F",
+      "symbol": "F",
+      "name": "Fleur",
+      "nameZh": "Fleur",
+      "color": "#c79846",
+      "portrait": "./assets/contest-person-F.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "G",
+      "symbol": "G",
+      "name": "Griselda",
+      "nameZh": "Griselda",
+      "color": "#72659b",
+      "portrait": "./assets/contest-person-G.svg",
+      "gender": "f",
+      "traits": [
+        "eyepatch"
+      ]
+    },
+    {
+      "id": "H",
+      "symbol": "H",
+      "name": "Hyacinth",
+      "nameZh": "Hyacinth",
+      "color": "#b3869a",
+      "portrait": "./assets/contest-person-H.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "I",
+      "symbol": "I",
+      "name": "Isolde",
+      "nameZh": "Isolde",
+      "color": "#a46b79",
+      "portrait": "./assets/contest-person-I.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "J",
+      "symbol": "J",
+      "name": "Julius",
+      "nameZh": "Julius",
+      "color": "#8b6956",
+      "portrait": "./assets/contest-person-J.svg",
+      "gender": "m",
+      "traits": [
+        "hat"
+      ]
+    },
+    {
+      "id": "K",
+      "symbol": "K",
+      "name": "Kathleen",
+      "nameZh": "Kathleen",
+      "color": "#978448",
+      "portrait": "./assets/contest-person-K.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "L",
+      "symbol": "L",
+      "name": "Linus",
+      "nameZh": "Linus",
+      "color": "#7e8472",
+      "portrait": "./assets/contest-person-L.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "M",
+      "symbol": "M",
+      "name": "Mortimer",
+      "nameZh": "Mortimer",
+      "color": "#5d7290",
+      "portrait": "./assets/contest-person-M.svg",
+      "gender": "m",
+      "traits": [
+        "hat"
+      ]
+    },
+    {
+      "id": "N",
+      "symbol": "N",
+      "name": "Nehemiah",
+      "nameZh": "Nehemiah",
+      "color": "#92634f",
+      "portrait": "./assets/contest-person-N.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "O",
+      "symbol": "O",
+      "name": "Orville",
+      "nameZh": "Orville",
+      "color": "#b68d63",
+      "portrait": "./assets/contest-person-O.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "P",
+      "symbol": "P",
+      "name": "Pedro",
+      "nameZh": "Pedro",
+      "color": "#7f8749",
+      "portrait": "./assets/contest-person-P.svg",
+      "gender": "m",
+      "traits": [
+        "eyepatch"
+      ]
+    },
+    {
+      "id": "Q",
+      "symbol": "Q",
+      "name": "Quincy",
+      "nameZh": "Quincy",
+      "color": "#9b8055",
+      "portrait": "./assets/contest-person-Q.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "R",
+      "symbol": "R",
+      "name": "Rosalind",
+      "nameZh": "Rosalind",
+      "color": "#688b74",
+      "portrait": "./assets/contest-person-R.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "S",
+      "symbol": "S",
+      "name": "Seraphina",
+      "nameZh": "Seraphina",
+      "color": "#9f8b50",
+      "portrait": "./assets/contest-person-S.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "U",
+      "symbol": "U",
+      "name": "Ursula",
+      "nameZh": "Ursula",
+      "color": "#9d5569",
+      "portrait": "./assets/contest-person-U.svg",
+      "gender": "f",
+      "traits": [
+        "hat",
+        "eyepatch"
+      ]
+    },
+    {
+      "id": "W",
+      "symbol": "W",
+      "name": "Wilfred",
+      "nameZh": "Wilfred",
+      "color": "#597c81",
+      "portrait": "./assets/contest-person-W.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "Y",
+      "symbol": "Y",
+      "name": "Yannis",
+      "nameZh": "Yannis",
+      "color": "#747e78",
+      "portrait": "./assets/contest-person-Y.svg",
+      "gender": "m",
+      "traits": []
+    },
+    {
+      "id": "Z",
+      "symbol": "Z",
+      "name": "Zoe",
+      "nameZh": "Zoe",
+      "color": "#7b6897",
+      "portrait": "./assets/contest-person-Z.svg",
+      "gender": "f",
+      "traits": []
+    },
+    {
+      "id": "T",
+      "symbol": "T",
+      "name": "Treasure",
+      "nameZh": "宝藏",
+      "color": "#bf964c",
+      "portrait": "./assets/contest-person-T.svg",
+      "treasure": true,
+      "canOccupyBlocked": true
+    }
+  ],
+  "clues": [
+    {
+      "id": "treasurehunt-rule-0",
+      "text": "One occupant in each row and column. This time, there is no murderer.",
+      "textZh": "每行、每列各占一格。本题没有凶手。"
+    },
+    {
+      "id": "treasurehunt-rule-1",
+      "text": "Sloops, Frigates and the Galleon all count as ships, and they count as their own areas.",
+      "textZh": "单桅帆船、护卫舰和大帆船都算船只，每一艘都是独立区域。"
+    },
+    {
+      "id": "treasurehunt-A",
+      "person": "A",
+      "text": "He was beside a fire.",
+      "textZh": "他在火堆旁边。",
+      "refs": [
+        {
+          "label": "fire",
+          "type": "object",
+          "value": "fire"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-B",
+      "person": "B",
+      "text": "He was on a hammock. There was no sack anywhere in his column.",
+      "textZh": "他在吊床上。他所在列的任何位置都没有袋子。",
+      "refs": [
+        {
+          "label": "hammock",
+          "type": "object",
+          "value": "hammock"
+        },
+        {
+          "label": "sack",
+          "type": "object",
+          "value": "sack"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-C",
+      "person": "C",
+      "text": "Someone exactly eight rows north of him was beside the tombstone.",
+      "textZh": "有个人在他正好北面八行的位置，并且在墓碑旁边。",
+      "refs": [
+        {
+          "label": "tombstone",
+          "type": "object",
+          "value": "tombstone"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-D",
+      "person": "D",
+      "text": "He was east of Griselda and west of Linus.",
+      "textZh": "他在 Griselda 的东边、Linus 的西边。",
+      "refs": [
+        {
+          "label": "Griselda",
+          "type": "person",
+          "value": "G"
+        },
+        {
+          "label": "Linus",
+          "type": "person",
+          "value": "L"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-E",
+      "person": "E",
+      "text": "She was beside a shelf.",
+      "textZh": "她在书架旁边。",
+      "refs": [
+        {
+          "label": "shelf",
+          "type": "object",
+          "value": "shelf"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-F",
+      "person": "F",
+      "text": "She was beside some flowers.",
+      "textZh": "她在花丛旁边。",
+      "refs": [
+        {
+          "label": "flowers",
+          "type": "object",
+          "value": "flower"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-G",
+      "person": "G",
+      "text": "She was in the top row of her area.",
+      "textZh": "她在自己所在区域的最上面一行。",
+      "refs": []
+    },
+    {
+      "id": "treasurehunt-H",
+      "person": "H",
+      "text": "She was on the Cliff. No one in an adjacent column wore a hat.",
+      "textZh": "她在悬崖区域。与她相邻列中的人都没有戴帽子。",
+      "refs": [
+        {
+          "label": "Cliff",
+          "labelZh": "悬崖",
+          "type": "room",
+          "value": "cliff"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-I",
+      "person": "I",
+      "text": "She was sitting in a chair. She was in a Cabin with someone wearing an eyepatch.",
+      "textZh": "她坐在椅子上。她在一间小屋内，同屋还有一位戴眼罩的人。",
+      "refs": [
+        {
+          "label": "chair",
+          "type": "object",
+          "value": "chair"
+        },
+        {
+          "label": "Cabin",
+          "labelZh": "小屋",
+          "type": "cells",
+          "value": [
+            3,
+            4,
+            5,
+            27,
+            28,
+            29,
+            51,
+            52,
+            53,
+            324,
+            325,
+            326,
+            348,
+            349,
+            350,
+            372,
+            373,
+            374,
+            396,
+            397,
+            398,
+            399,
+            421,
+            422,
+            423,
+            492,
+            493,
+            494,
+            495,
+            516,
+            517,
+            518,
+            519,
+            541,
+            542,
+            543
+          ]
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-J",
+      "person": "J",
+      "text": "He was beside a barrel.",
+      "textZh": "他在木桶旁边。",
+      "refs": [
+        {
+          "label": "barrel",
+          "type": "object",
+          "value": "barrel"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-K",
+      "person": "K",
+      "text": "She was on a Sloop.",
+      "textZh": "她在一艘单桅帆船上。",
+      "refs": [
+        {
+          "label": "Sloop",
+          "labelZh": "单桅帆船",
+          "type": "cells",
+          "value": [
+            268,
+            269,
+            313,
+            314,
+            319,
+            320
+          ]
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-L",
+      "person": "L",
+      "text": "He was beside a tree.",
+      "textZh": "他在树旁边。",
+      "refs": [
+        {
+          "label": "tree",
+          "type": "object",
+          "value": "tree"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-M",
+      "person": "M",
+      "text": "He was on a ship, beside some rope.",
+      "textZh": "他在船上，并在绳索旁边。",
+      "refs": [
+        {
+          "label": "rope",
+          "type": "object",
+          "value": "rope"
+        },
+        {
+          "label": "ship",
+          "labelZh": "船",
+          "type": "cells",
+          "value": [
+            206,
+            207,
+            208,
+            230,
+            231,
+            232,
+            268,
+            269,
+            313,
+            314,
+            319,
+            320,
+            364,
+            365,
+            366,
+            367,
+            388,
+            389,
+            390,
+            391,
+            412,
+            413,
+            414,
+            415,
+            528,
+            529,
+            530,
+            552,
+            553,
+            554
+          ]
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-N",
+      "person": "N",
+      "text": "He was in the Water, beside a ship.",
+      "textZh": "他在水域，并在船旁边。",
+      "refs": [
+        {
+          "label": "Water",
+          "labelZh": "水域",
+          "type": "room",
+          "value": "water"
+        },
+        {
+          "label": "ship",
+          "labelZh": "船",
+          "type": "cells",
+          "value": [
+            206,
+            207,
+            208,
+            230,
+            231,
+            232,
+            268,
+            269,
+            313,
+            314,
+            319,
+            320,
+            364,
+            365,
+            366,
+            367,
+            388,
+            389,
+            390,
+            391,
+            412,
+            413,
+            414,
+            415,
+            528,
+            529,
+            530,
+            552,
+            553,
+            554
+          ]
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-O",
+      "person": "O",
+      "text": "He was on a ship.",
+      "textZh": "他在船上。",
+      "refs": [
+        {
+          "label": "ship",
+          "labelZh": "船",
+          "type": "cells",
+          "value": [
+            206,
+            207,
+            208,
+            230,
+            231,
+            232,
+            268,
+            269,
+            313,
+            314,
+            319,
+            320,
+            364,
+            365,
+            366,
+            367,
+            388,
+            389,
+            390,
+            391,
+            412,
+            413,
+            414,
+            415,
+            528,
+            529,
+            530,
+            552,
+            553,
+            554
+          ]
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-P",
+      "person": "P",
+      "text": "He was on a bed.",
+      "textZh": "他在床上。",
+      "refs": [
+        {
+          "label": "bed",
+          "type": "object",
+          "value": "bed"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-Q",
+      "person": "Q",
+      "text": "He was in the Water, beside a shark.",
+      "textZh": "他在水域，并在鲨鱼旁边。",
+      "refs": [
+        {
+          "label": "shark",
+          "type": "object",
+          "value": "shark"
+        },
+        {
+          "label": "Water",
+          "labelZh": "水域",
+          "type": "room",
+          "value": "water"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-R",
+      "person": "R",
+      "text": "She was sitting in a chair.",
+      "textZh": "她坐在椅子上。",
+      "refs": [
+        {
+          "label": "chair",
+          "type": "object",
+          "value": "chair"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-S",
+      "person": "S",
+      "text": "She was at least six rows north of Linus.",
+      "textZh": "她至少在 Linus 北面六行的位置。",
+      "refs": [
+        {
+          "label": "Linus",
+          "type": "person",
+          "value": "L"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-U",
+      "person": "U",
+      "text": "She was in front of a door.",
+      "textZh": "她在门前的格子里（门内、门外的两个格子都算）。",
+      "refs": [
+        {
+          "label": "door",
+          "labelZh": "门",
+          "type": "cells",
+          "value": [
+            52,
+            76,
+            396,
+            420,
+            491,
+            492,
+            501,
+            525
+          ]
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-W",
+      "person": "W",
+      "text": "He was beside a pig.",
+      "textZh": "他在猪旁边。",
+      "refs": [
+        {
+          "label": "pig",
+          "type": "object",
+          "value": "pig"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-Y",
+      "person": "Y",
+      "text": "He was in the Woods. He was not beside a tree.",
+      "textZh": "他在树林里。他不在树旁边。",
+      "refs": [
+        {
+          "label": "tree",
+          "type": "object",
+          "value": "tree"
+        },
+        {
+          "label": "Woods",
+          "labelZh": "树林",
+          "type": "room",
+          "value": "woods"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-Z",
+      "person": "Z",
+      "text": "She was beside a shrub.",
+      "textZh": "她在灌木旁边。",
+      "refs": [
+        {
+          "label": "shrub",
+          "type": "object",
+          "value": "bush"
+        }
+      ]
+    },
+    {
+      "id": "treasurehunt-T",
+      "person": "T",
+      "text": "In the last square. It can be buried beneath an object that cannot otherwise be occupied.",
+      "textZh": "宝藏在最后剩下的格子里。它可以埋在普通人物不能占据的物品下面。",
+      "refs": []
+    }
+  ],
+  "constraints": [
+    {
+      "type": "cells",
+      "person": "A",
+      "cells": [
+        44,
+        67,
+        69,
+        92,
+        195,
+        218,
+        220,
+        243
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "E",
+      "cells": [
+        4,
+        29,
+        324,
+        326,
+        349,
+        406,
+        500
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "F",
+      "cells": [
+        77,
+        102,
+        125,
+        254,
+        256,
+        279,
+        283,
+        285,
+        308,
+        489,
+        490,
+        512,
+        513,
+        515,
+        536,
+        561
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "J",
+      "cells": [
+        128,
+        151,
+        153,
+        176,
+        202,
+        225,
+        268,
+        380,
+        393,
+        398,
+        403,
+        407,
+        416,
+        421,
+        423,
+        440,
+        441,
+        463,
+        528,
+        530,
+        553
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "L",
+      "cells": [
+        9,
+        13,
+        15,
+        31,
+        34,
+        38,
+        39,
+        49,
+        54,
+        56,
+        57,
+        58,
+        61,
+        62,
+        72,
+        74,
+        79,
+        80,
+        81,
+        83,
+        86,
+        97,
+        103,
+        105,
+        123,
+        125,
+        148,
+        173,
+        196,
+        198,
+        221,
+        236,
+        256,
+        261,
+        279,
+        281,
+        285,
+        304,
+        308,
+        310,
+        329,
+        331,
+        333,
+        354,
+        524,
+        539,
+        545,
+        547,
+        549,
+        562,
+        564,
+        568,
+        570,
+        572
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "W",
+      "cells": [
+        234,
+        236,
+        308,
+        310,
+        331,
+        333,
+        335,
+        356,
+        358,
+        365,
+        388
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "Z",
+      "cells": [
+        1,
+        8,
+        24,
+        31,
+        56,
+        60,
+        76,
+        83,
+        99,
+        102,
+        125,
+        127,
+        150,
+        526,
+        549,
+        551,
+        574
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "B",
+      "cells": [
+        22,
+        116,
+        216,
+        217,
+        461
+      ]
+    },
+    {
+      "type": "rowWitness",
+      "person": "C",
+      "offset": -8,
+      "cells": [
+        13,
+        36,
+        38,
+        61
+      ],
+      "excludeTreasure": true
+    },
+    {
+      "type": "relative",
+      "person": "D",
+      "other": "G",
+      "direction": "east"
+    },
+    {
+      "type": "relative",
+      "person": "D",
+      "other": "L",
+      "direction": "west"
+    },
+    {
+      "type": "cells",
+      "person": "G",
+      "cells": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        15,
+        16,
+        17,
+        18,
+        21,
+        22,
+        23,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        206,
+        208,
+        233,
+        234,
+        236,
+        268,
+        298,
+        313,
+        314,
+        319,
+        320,
+        324,
+        326,
+        365,
+        380,
+        485,
+        486,
+        492,
+        493,
+        494,
+        495,
+        528,
+        530
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "H",
+      "cells": [
+        485,
+        486,
+        509,
+        510,
+        533,
+        534
+      ]
+    },
+    {
+      "type": "adjacentColumnTrait",
+      "person": "H",
+      "trait": "hat",
+      "negate": true
+    },
+    {
+      "type": "cells",
+      "person": "I",
+      "cells": [
+        51,
+        348,
+        398,
+        495
+      ]
+    },
+    {
+      "type": "roomContains",
+      "person": "I",
+      "trait": "eyepatch"
+    },
+    {
+      "type": "cells",
+      "person": "K",
+      "cells": [
+        268,
+        313,
+        314,
+        319,
+        320
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "M",
+      "cells": [
+        230,
+        232,
+        365,
+        389,
+        390,
+        414
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "N",
+      "cells": [
+        182,
+        183,
+        184,
+        205,
+        209,
+        229,
+        245,
+        267,
+        270,
+        289,
+        290,
+        292,
+        293,
+        295,
+        296,
+        312,
+        315,
+        318,
+        337,
+        340,
+        341,
+        342,
+        343,
+        344,
+        363,
+        387,
+        411,
+        436,
+        505,
+        531,
+        555
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "O",
+      "cells": [
+        206,
+        208,
+        230,
+        232,
+        268,
+        313,
+        314,
+        319,
+        320,
+        365,
+        388,
+        389,
+        390,
+        391,
+        414,
+        528,
+        530,
+        552,
+        553,
+        554
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "P",
+      "cells": [
+        4,
+        28,
+        326,
+        350,
+        517,
+        541
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "Q",
+      "cells": [
+        226,
+        249,
+        251,
+        264,
+        274,
+        289,
+        312,
+        337,
+        339,
+        362,
+        432,
+        457,
+        480,
+        482,
+        505,
+        507
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "R",
+      "cells": [
+        51,
+        348,
+        398,
+        405,
+        452,
+        453,
+        477,
+        495,
+        503
+      ]
+    },
+    {
+      "type": "relative",
+      "person": "S",
+      "other": "L",
+      "direction": "north",
+      "minRows": 6
+    },
+    {
+      "type": "cells",
+      "person": "U",
+      "cells": [
+        52,
+        76,
+        396,
+        420,
+        491,
+        492,
+        501,
+        525
+      ]
+    },
+    {
+      "type": "cells",
+      "person": "Y",
+      "cells": [
+        1,
+        2,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        16,
+        24,
+        26,
+        30,
+        35,
+        36,
+        40,
+        48,
+        50,
+        59,
+        60,
+        75,
+        76,
+        77,
+        78,
+        96,
+        98,
+        99,
+        102,
+        121,
+        122,
+        127,
+        146,
+        147,
+        149,
+        150
+      ]
+    }
+  ],
+  "rules": {
+    "rowUnique": true,
+    "colUnique": true,
+    "murder": false,
+    "treasure": true
+  },
+  "hints": [],
+  "source": "Official contest PDF supplied by the user: murdoku-contest1-treasurehunt-EN.pdf. Puzzle by Manuel Garand. Art by Valentyna Bezdushna and Manuel Garand.",
+  "background": "./assets/contest-map.png",
+  "mapArtwork": true,
+  "pdf": "./assets/contest-original.pdf",
+  "pdfName": "murdoku-contest1-treasurehunt-EN.pdf",
+  "legend": {
+    "fire": "Fire / 火堆",
+    "tree": "Tree / 树",
+    "flower": "Flowers / 花丛",
+    "shark": "Shark / 鲨鱼",
+    "sack": "Sack / 袋子",
+    "pig": "Pig / 猪",
+    "tombstone": "Tombstone / 墓碑",
+    "crate": "Crate / 木箱",
+    "rope": "Rope / 绳索",
+    "barrel": "Barrel / 木桶",
+    "shelf": "Shelf / 书架",
+    "bush": "Shrub / 灌木",
+    "table": "Table / 桌子",
+    "rock": "Boulder / 巨石",
+    "bed": "Bed / 床",
+    "chair": "Chair / 椅子",
+    "hammock": "Hammock / 吊床"
+  },
+  "hasAnswerKey": false,
+  "labelOverlay": "./assets/contest-labels.svg"
+}

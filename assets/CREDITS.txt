@@ -1,0 +1,5 @@
+Murdoku logo, portrait SVG layers and object art are from the publicly served Murdoku game, downloaded 2026-10-09 for this user-requested local practice recreation. Murdoku © Manuel Garand / Digivoid Studios Inc. Character art by Valentyna Bezdushna; object art by Manuel Garand. Golf puzzle by Craig Wallander. https://murdoku.com/play/puzzle-the-golf-expert
+The application code is a separate local implementation, not the official hosted application.
+
+Treasure Hunt contest data and artwork: the user-supplied murdoku-contest1-treasurehunt-EN.pdf, incorporated 2026-10-09. Puzzle by Manuel Garand; character artwork by Valentyna Bezdushna; object artwork by Manuel Garand. The original PDF is preserved as contest-original.pdf. Map and area labels are exact source crops; character sprites are extracted source vector paths. The original English clues are transcribed and accompanied by Chinese translations. No official solution or generated hints are included for this contest puzzle.
+https://murdoku.com/contest/
